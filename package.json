@@ -13,6 +13,7 @@
     "@types/mongoose": "^5.11.97",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.23.3",
+    "mongodb": "^5.9.0",
     "mongoose": "^8.16.3",
     "next": "15.3.5",
     "next-auth": "^4.24.11",
