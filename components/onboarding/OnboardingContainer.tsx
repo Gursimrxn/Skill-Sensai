@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { AnimatePresence } from 'framer-motion';
 import WelcomeStep from './WelcomeStep';
 import ResumeStep from './ResumeStep';
@@ -20,7 +19,6 @@ interface UserData {
 
 export default function OnboardingContainer() {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -58,16 +56,15 @@ export default function OnboardingContainer() {
     fetchUserData();
   }, [status, session]);
 
-  const handleStepComplete = async (step: number, data: any) => {
+  const handleStepComplete = async (step: number, data: { skills?: string[]; resumeUrl?: string; level?: number }) => {
     try {
-      // Update step data locally
       switch (step) {
         case 1:
-          setStepData(prev => ({ ...prev, skills: data.skills }));
+          setStepData(prev => ({ ...prev, skills: data.skills ?? [] }));
           setCurrentStep(2);
           break;
         case 2:
-          setStepData(prev => ({ ...prev, resumeUrl: data.resumeUrl }));
+          setStepData(prev => ({ ...prev, resumeUrl: data.resumeUrl ?? '' }));
           setCurrentStep(3);
           break;
         case 3:

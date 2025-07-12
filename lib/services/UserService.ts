@@ -9,20 +9,20 @@ export class UserService implements IUserService {
     return await this.userRepository.findById(id);
   }
 
-  async create(userData: any): Promise<IUser> {
+  async create(userData: Record<string, unknown>): Promise<IUser> {
     return await this.userRepository.create({
-      email: userData.email,
-      name: userData.name,
-      image: userData.image,
-      provider: userData.provider,
-      providerId: userData.providerId,
+      email: userData.email as string,
+      name: userData.name as string,
+      image: userData.image as string,
+      provider: userData.provider as string,
+      providerId: userData.providerId as string,
       onboardingCompleted: false,
       level: 1,
     });
   }
 
-  async createUser(userData: any): Promise<IUser> {
-    const existingUser = await this.userRepository.findByEmail(userData.email);
+  async createUser(userData: Record<string, unknown>): Promise<IUser> {
+    const existingUser = await this.userRepository.findByEmail(userData.email as string);
     if (existingUser) {
       throw new Error('User already exists');
     }
@@ -30,7 +30,7 @@ export class UserService implements IUserService {
     return await this.create(userData);
   }
 
-  async updateUser(id: string, data: any): Promise<IUser | null> {
+  async updateUser(id: string, data: Record<string, unknown>): Promise<IUser | null> {
     return await this.userRepository.update(id, data);
   }
 
@@ -39,12 +39,12 @@ export class UserService implements IUserService {
     return user?.onboardingCompleted || false;
   }
 
-  async completeOnboarding(userId: string, data: any): Promise<IUser | null> {
+  async completeOnboarding(userId: string, data: Record<string, unknown>): Promise<IUser | null> {
     return await this.userRepository.update(userId, {
       onboardingCompleted: true,
-      skills: data.skills,
-      resumeUrl: data.resumeUrl,
-      level: data.level,
+      skills: data.skills as string[],
+      resumeUrl: data.resumeUrl as string,
+      level: data.level as number,
     });
   }
 

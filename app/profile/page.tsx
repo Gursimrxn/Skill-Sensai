@@ -3,6 +3,7 @@
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface UserData {
   id: string;
@@ -69,9 +70,11 @@ export default function ProfilePage() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
               {userData.image && (
-                <img
+                <Image
                   src={userData.image}
                   alt="Profile"
+                  width={64}
+                  height={64}
                   className="w-16 h-16 rounded-full"
                 />
               )}

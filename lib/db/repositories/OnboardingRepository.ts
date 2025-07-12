@@ -18,12 +18,12 @@ export class OnboardingRepository implements IRepository<IOnboarding> {
     return await Onboarding.findById(id);
   }
 
-  async findOne(filter: Record<string, any>): Promise<IOnboarding | null> {
+  async findOne(filter: Record<string, unknown>): Promise<IOnboarding | null> {
     await this.ensureConnection();
     return await Onboarding.findOne(filter);
   }
 
-  async findMany(filter: Record<string, any>): Promise<IOnboarding[]> {
+  async findMany(filter: Record<string, unknown>): Promise<IOnboarding[]> {
     await this.ensureConnection();
     return await Onboarding.find(filter);
   }
@@ -44,9 +44,9 @@ export class OnboardingRepository implements IRepository<IOnboarding> {
     return await Onboarding.findOne({ userId });
   }
 
-  async updateStep(userId: string, step: number, stepData: any): Promise<IOnboarding | null> {
+  async updateStep(userId: string, step: number, stepData: Record<string, unknown>): Promise<IOnboarding | null> {
     await this.ensureConnection();
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       currentStep: step,
     };
 

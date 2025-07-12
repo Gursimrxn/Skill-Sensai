@@ -2,35 +2,35 @@
 export interface IRepository<T> {
   create(data: Partial<T>): Promise<T>;
   findById(id: string): Promise<T | null>;
-  findOne(filter: Record<string, any>): Promise<T | null>;
-  findMany(filter: Record<string, any>): Promise<T[]>;
+  findOne(filter: Record<string, unknown>): Promise<T | null>;
+  findMany(filter: Record<string, unknown>): Promise<T[]>;
   update(id: string, data: Partial<T>): Promise<T | null>;
   delete(id: string): Promise<boolean>;
 }
 
 export interface IAuthService {
-  getCurrentUser(): Promise<any>;
+  getCurrentUser(): Promise<unknown>;
   signOut(): Promise<void>;
 }
 
 export interface IUserService {
-  getUserById(id: string): Promise<any>;
-  createUser(userData: any): Promise<any>;
-  updateUser(id: string, data: any): Promise<any>;
+  getUserById(id: string): Promise<unknown>;
+  createUser(userData: Record<string, unknown>): Promise<unknown>;
+  updateUser(id: string, data: Record<string, unknown>): Promise<unknown>;
   checkOnboardingStatus(userId: string): Promise<boolean>;
-  completeOnboarding(userId: string, data: any): Promise<any>;
+  completeOnboarding(userId: string, data: Record<string, unknown>): Promise<unknown>;
 }
 
 export interface IOnboardingService {
-  createOnboardingSession(userId: string): Promise<any>;
-  updateOnboardingStep(sessionId: string, step: number, data: any): Promise<any>;
-  completeOnboarding(sessionId: string): Promise<any>;
-  getOnboardingProgress(userId: string): Promise<any>;
+  createOnboardingSession(userId: string): Promise<unknown>;
+  updateOnboardingStep(sessionId: string, step: number, data: Record<string, unknown>): Promise<unknown>;
+  completeOnboarding(sessionId: string): Promise<unknown>;
+  getOnboardingProgress(userId: string): Promise<unknown>;
 }
 
 // Service locator pattern for dependency injection
 export class ServiceLocator {
-  private static services: Map<string, any> = new Map();
+  private static services: Map<string, unknown> = new Map();
 
   static register<T>(key: string, service: T): void {
     this.services.set(key, service);
@@ -41,7 +41,7 @@ export class ServiceLocator {
     if (!service) {
       throw new Error(`Service ${key} not found`);
     }
-    return service;
+    return service as T;
   }
 }
 

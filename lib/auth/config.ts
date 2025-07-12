@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === 'google') {
         try {
           const userService = DIContainer.getUserService();
@@ -60,14 +60,14 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     
-    async session({ session, token }) {
+    async session({ session }) {
       if (session.user?.email) {
         try {
           const userService = DIContainer.getUserService();
           const user = await userService.findByEmail(session.user.email);
           
-          if (user) {
-            session.user.id = (user as any)._id.toString();
+          if (user && user._id != null) {
+            session.user.id = typeof user._id === 'object' && 'toString' in user._id ? user._id.toString() : String(user._id);
             session.user.onboardingCompleted = user.onboardingCompleted;
             session.user.level = user.level;
             session.user.skills = user.skills;
@@ -87,7 +87,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   events: {
-    async signIn({ user, account, isNewUser }) {
+    async signIn({ user, isNewUser }) {
       if (isNewUser && user.email) {
         try {
           const onboardingService = DIContainer.getOnboardingService();

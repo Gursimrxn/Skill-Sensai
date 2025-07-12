@@ -18,12 +18,12 @@ export class UserRepository implements IRepository<IUser> {
     return await User.findById(id);
   }
 
-  async findOne(filter: Record<string, any>): Promise<IUser | null> {
+  async findOne(filter: Record<string, unknown>): Promise<IUser | null> {
     await this.ensureConnection();
     return await User.findOne(filter);
   }
 
-  async findMany(filter: Record<string, any>): Promise<IUser[]> {
+  async findMany(filter: Record<string, unknown>): Promise<IUser[]> {
     await this.ensureConnection();
     return await User.find(filter);
   }

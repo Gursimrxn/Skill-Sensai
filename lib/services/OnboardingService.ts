@@ -11,11 +11,10 @@ export class OnboardingService implements IOnboardingService {
 
   async initializeOnboarding(userEmail: string): Promise<IOnboarding> {
     const user = await this.userRepository.findByEmail(userEmail);
-    if (!user) {
+    if (!user || user._id == null) {
       throw new Error('User not found');
     }
-
-    return await this.createOnboardingSession((user as any)._id.toString());
+    return await this.createOnboardingSession(typeof user._id === 'object' && 'toString' in user._id ? user._id.toString() : String(user._id));
   }
 
   async createOnboardingSession(userId: string): Promise<IOnboarding> {
@@ -36,7 +35,7 @@ export class OnboardingService implements IOnboardingService {
     });
   }
 
-  async updateOnboardingStep(userId: string, step: number, data: any): Promise<IOnboarding | null> {
+  async updateOnboardingStep(userId: string, step: number, data: Record<string, unknown>): Promise<IOnboarding | null> {
     const onboarding = await this.onboardingRepository.updateStep(userId, step, data);
     
     // If this is the final step, also update the user record
@@ -54,11 +53,10 @@ export class OnboardingService implements IOnboardingService {
 
   async completeOnboarding(userId: string): Promise<IOnboarding | null> {
     const onboarding = await this.onboardingRepository.findByUserId(userId);
-    if (!onboarding) {
+    if (!onboarding || onboarding._id == null) {
       throw new Error('Onboarding session not found');
     }
-
-    return await this.onboardingRepository.update((onboarding as any)._id.toString(), {
+    return await this.onboardingRepository.update(typeof onboarding._id === 'object' && 'toString' in onboarding._id ? onboarding._id.toString() : String(onboarding._id), {
       completed: true,
       completedAt: new Date(),
     });

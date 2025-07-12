@@ -51,7 +51,7 @@ export default function WelcomeStep({ userName, onNext }: WelcomeStepProps) {
             Hey {userName}! 👋
           </h1>
           <p className="text-xl text-gray-600">
-            Let's get started by adding your skills
+            Let&apos;s get started by adding your skills
           </p>
         </motion.div>
 
