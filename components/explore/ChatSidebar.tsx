@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { ChatMessage, SuggestedUser, Request } from '@/lib/data/explore-data';
+import { ChatMessage, SuggestedUser } from '@/lib/data/explore-data';
 import { motion } from 'framer-motion';
+// Removed signOut import; logout moved to header
 
 interface ChatSidebarProps {
   chatMessages: ChatMessage[];
   suggestedUsers: SuggestedUser[];
   chatInput: string;
-  sentRequests: Request[];
-  receivedRequests: Request[];
+  sentRequests: any[];
+  receivedRequests: any[];
   onChatInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSendMessage: () => void;
   onAcceptRequest: (requestId: number) => void;
@@ -29,6 +30,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   return (
     <div className="w-120 flex flex-col gap-2 p-2 max-h-screen">
+
       {/* REQUESTS SECTION */}
       <div className="bg-black/10 rounded-[20px] flex flex-col flex-1 min-h-0">
         {/* Header with Tabs */}
@@ -138,7 +140,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 };
 
 interface RequestCardProps {
-  request: Request;
+  request: any;
   index: number;
   type: 'sent' | 'received';
   onAccept?: () => void;
@@ -157,14 +159,14 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, index, type, onAccep
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
-            {request.user.avatar}
+            {type === 'received' ? request.fromUser.avatar : request.toUser.avatar}
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="font-bold text-gray-900 font-urbanist text-sm truncate">{request.user.name}</h4>
+            <h4 className="font-bold text-gray-900 font-urbanist text-sm truncate">{type === 'received' ? request.fromUser.name : request.toUser.name}</h4>
           </div>
         </div>
         <div className="bg-black text-white px-2 py-1 rounded-full text-xs font-bold flex-shrink-0">
-          Level {request.user.level}
+          Level {type === 'received' ? request.fromUser.level : request.toUser.level}
         </div>
       </div>
 
