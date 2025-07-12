@@ -31,7 +31,7 @@ export default function Home() {
           <div className="mb-16">
             <Image
               className="mx-auto mb-8 dark:invert"
-              src="/next.svg"
+              src="/logo.png"
               alt="Skill Sensai logo"
               width={200}
               height={50}
