@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // Import components
 import { UserCard } from '@/components/explore/UserCard';
@@ -10,6 +12,30 @@ import { SearchBar } from '@/components/explore/SearchBar';
 import { Header } from '@/components/explore/Header';
 
 export default function ExplorePage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+      return;
+    }
+  }, [status, router]);
+
+  // Show loading while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#fffbf7] flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render content if not authenticated
+  if (status === 'unauthenticated') {
+    return null;
+  }
   // State for search and filters
   const [searchQuery, setSearchQuery] = useState("");
   const [availability, setAvailability] = useState("Availability");

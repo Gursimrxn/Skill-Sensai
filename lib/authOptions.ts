@@ -29,10 +29,14 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
+      // If redirect is from sign in callback, go to explore
+      if (url.startsWith(`${baseUrl}/api/auth/callback`)) {
+        return `${baseUrl}/explore`;
+      }
       // Allow custom callback URLs to work
       if (url.startsWith(baseUrl)) return url;
-      // Default redirect to /explore
-      return `${baseUrl}/explore`;
+      // Default redirect to home for unauthenticated access
+      return baseUrl;
     },
   },
   session: {
