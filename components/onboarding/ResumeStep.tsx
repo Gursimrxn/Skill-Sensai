@@ -10,7 +10,7 @@ interface ResumeStepProps {
   onBack: () => void;
 }
 
-export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
+export default function ResumeStep({ onNext }: ResumeStepProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -149,10 +149,6 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
     }
   };
 
-  const handleSkip = () => {
-    onNext('', []); // Skip with empty URL and no skills
-  };
-
   return (
     <motion.div
       variants={staggerContainer}
@@ -168,7 +164,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
           className="mb-6 text-center"
         >
           <div className="inline-flex items-center px-4 py-2 bg-orange-100 border border-orange-300 rounded-lg text-orange-700 text-sm">
-            Don't add something you don't know you will be banned
+            Don&apos;t add something you don&apos;t know you will be banned
           </div>
         </motion.div>
 

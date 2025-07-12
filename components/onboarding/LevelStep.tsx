@@ -8,7 +8,7 @@ interface LevelStepProps {
   onBack: () => void;
 }
 
-export default function LevelStep({ onComplete, onBack }: LevelStepProps) {
+export default function LevelStep({ onComplete }: LevelStepProps) {
   const [level] = useState(1);
 
   const handleTakeTest = () => {

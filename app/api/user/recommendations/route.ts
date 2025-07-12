@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let levelCondition: any = {};
+    const levelCondition: any = {};
     if (includeLevelMatch) {
       levelCondition.level = {
         $gte: Math.max(1, currentUser.level - maxLevelDifference),
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
       };
     }
 
-    let availabilityCondition: any = {};
+    const availabilityCondition: any = {};
     if (includeAvailabilityMatch && userAvailability?.days?.length) {
       availabilityCondition['availability.days'] = { $in: userAvailability.days };
     }
