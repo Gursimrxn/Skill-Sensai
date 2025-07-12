@@ -117,7 +117,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
         const arrayMatch = content.match(/\[([^\]]+)\]/);
         if (arrayMatch) {
           const skillsString = arrayMatch[1];
-          const skills = skillsString.split(',').map(skill => skill.trim().replace(/["']/g, ''));
+          const skills = skillsString.split(',').map((skill: string) => skill.trim().replace(/["']/g, ''));
           return skills;
         }
         return [];
