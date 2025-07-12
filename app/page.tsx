@@ -1,10 +1,8 @@
 'use client';
 
-import { useSession, signIn } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 export default function Home() {
-  const { data: session, status } = useSession();
-
   const handleGoogleSignIn = () => {
     signIn('google', { callbackUrl: '/explore' });
   };
