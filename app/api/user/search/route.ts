@@ -149,13 +149,13 @@ export async function POST(request: NextRequest) {
       
       // Skill matching score
       if (skills.length > 0) {
-        const matchingSkills = user.skills?.filter(skill => skills.includes(skill)) || [];
+        const matchingSkills = user.skills?.filter((skill: string) => skills.includes(skill)) || [];
         matchScore += matchingSkills.length * 2;
       }
       
       // Skills to learn matching score
       if (skillsToLearn.length > 0) {
-        const matchingSkillsToLearn = user.skillsToLearn?.filter(skill => skillsToLearn.includes(skill)) || [];
+        const matchingSkillsToLearn = user.skillsToLearn?.filter((skill: string) => skillsToLearn.includes(skill)) || [];
         matchScore += matchingSkillsToLearn.length;
       }
       

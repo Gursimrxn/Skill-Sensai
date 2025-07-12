@@ -7,10 +7,7 @@ import { ConnectionRepository } from '../../../../lib/db/repositories/Connection
 import { UserAvailabilityRepository } from '../../../../lib/db/repositories/UserAvailabilityRepository';
 import { ConnectionService } from '../../../../lib/services/ConnectionService';
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -33,6 +30,10 @@ export async function PUT(
       return NextResponse.json({ error: 'Action is required' }, { status: 400 });
     }
 
+    // Extract connection id from URL
+    const url = new URL(request.url);
+    const segments = url.pathname.split('/');
+    const id = segments[segments.length - 1];
     const connectionRepository = new ConnectionRepository();
     const availabilityRepository = new UserAvailabilityRepository();
     const connectionService = new ConnectionService(connectionRepository, availabilityRepository);
@@ -40,25 +41,25 @@ export async function PUT(
     let updatedConnection;
 
     switch (action) {
-      case 'accept':
-        updatedConnection = await connectionService.acceptConnection(
-          params.id,
-          currentUser._id.toString()
-        );
+        case 'accept':
+          updatedConnection = await connectionService.acceptConnection(
+            id,
+            currentUser._id.toString()
+          );
         break;
       
-      case 'decline':
-        updatedConnection = await connectionService.declineConnection(
-          params.id,
-          currentUser._id.toString()
-        );
+        case 'decline':
+          updatedConnection = await connectionService.declineConnection(
+            id,
+            currentUser._id.toString()
+          );
         break;
       
-      case 'cancel':
-        updatedConnection = await connectionService.cancelConnection(
-          params.id,
-          currentUser._id.toString()
-        );
+        case 'cancel':
+          updatedConnection = await connectionService.cancelConnection(
+            id,
+            currentUser._id.toString()
+          );
         break;
       
       default:
@@ -106,10 +107,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -125,11 +123,16 @@ export async function DELETE(
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Extract connection id from URL
+    const url = new URL(request.url);
+    const segments = url.pathname.split('/');
+    const id = segments[segments.length - 1];
     const connectionRepository = new ConnectionRepository();
     const availabilityRepository = new UserAvailabilityRepository();
     const connectionService = new ConnectionService(connectionRepository, availabilityRepository);
 
-    await connectionService.cancelConnection(params.id, currentUser._id.toString());
+    // Cancel connection by extracted id
+    await connectionService.cancelConnection(id, currentUser._id.toString());
 
     return NextResponse.json({ message: 'Connection deleted successfully' });
 
