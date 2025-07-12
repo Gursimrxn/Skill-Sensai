@@ -34,3 +34,28 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+### Project Structure
+```
+├── app/                          # Next.js 13+ App Router
+│   ├── api/                      # API Routes
+│   │   ├── auth/[...nextauth]/   # NextAuth configuration
+│   │   └── onboarding/           # Onboarding API endpoints
+│   ├── onboarding/               # Onboarding flow pages
+│   ├── profile/                  # User profile page
+│   └── test/                     # Testing interface
+├── components/                   # React components
+│   ├── onboarding/              # Onboarding flow components
+│   ├── animations/              # Framer Motion variants
+│   └── providers/               # Context providers
+├── hooks/                       # Custom React hooks
+├── lib/                         # Core business logic
+│   ├── core/                    # Type definitions and interfaces
+│   ├── db/                      # Database layer
+│   │   ├── models/              # MongoDB models
+│   │   └── repositories/        # Data access layer
+│   ├── services/                # Business logic services
+│   └── di/                      # Dependency injection container
+└── types/                       # TypeScript type definitions
+```
