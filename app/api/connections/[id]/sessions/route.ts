@@ -7,10 +7,7 @@ import { ConnectionRepository } from '../../../../../lib/db/repositories/Connect
 import { UserAvailabilityRepository } from '../../../../../lib/db/repositories/UserAvailabilityRepository';
 import { ConnectionService } from '../../../../../lib/services/ConnectionService';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -36,12 +33,16 @@ export async function POST(
       );
     }
 
+    // Extract connection id from URL
+    const url = new URL(request.url);
+    const segments = url.pathname.split('/');
+    const id = segments[segments.length - 2]; // second last segment is id
     const connectionRepository = new ConnectionRepository();
     const availabilityRepository = new UserAvailabilityRepository();
     const connectionService = new ConnectionService(connectionRepository, availabilityRepository);
 
     const updatedConnection = await connectionService.scheduleSession(
-      params.id,
+      id,
       currentUser._id.toString(),
       {
         date: new Date(date),
@@ -87,10 +88,7 @@ export async function POST(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -116,6 +114,10 @@ export async function PUT(
       );
     }
 
+    // Extract connection id from URL
+    const url = new URL(request.url);
+    const segments = url.pathname.split('/');
+    const id = segments[segments.length - 3]; // third last segment is id
     const connectionRepository = new ConnectionRepository();
     const availabilityRepository = new UserAvailabilityRepository();
     const connectionService = new ConnectionService(connectionRepository, availabilityRepository);
@@ -125,7 +127,7 @@ export async function PUT(
     switch (action) {
       case 'cancel':
         updatedConnection = await connectionService.cancelSession(
-          params.id,
+          id,
           slotIndex,
           currentUser._id.toString()
         );
@@ -133,7 +135,7 @@ export async function PUT(
       
       case 'complete':
         updatedConnection = await connectionService.completeSession(
-          params.id,
+          id,
           slotIndex,
           currentUser._id.toString(),
           notes

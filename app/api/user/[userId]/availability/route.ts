@@ -2,14 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../../lib/authOptions';
 import connectDB from '../../../../../lib/db/connection';
-import { User } from '../../../../../lib/db/models/User';
 import { UserAvailabilityRepository } from '../../../../../lib/db/repositories/UserAvailabilityRepository';
 import { AvailabilityService } from '../../../../../lib/services/AvailabilityService';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { userId: string } }
-) {
+export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -19,7 +15,10 @@ export async function GET(
 
     await connectDB();
 
-    const { searchParams } = new URL(request.url);
+    const url = new URL(request.url);
+    const segments = url.pathname.split('/');
+    const userId = segments[segments.length - 2];
+    const { searchParams } = url;
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
 
@@ -34,7 +33,7 @@ export async function GET(
     const availabilityService = new AvailabilityService(availabilityRepository);
 
     const availableSlots = await availabilityService.getAvailableSlots(
-      params.userId,
+      userId,
       new Date(startDate),
       new Date(endDate)
     );

@@ -6,10 +6,7 @@ import { User } from '../../../../../lib/db/models/User';
 import { UserAvailabilityRepository } from '../../../../../lib/db/repositories/UserAvailabilityRepository';
 import { AvailabilityService } from '../../../../../lib/services/AvailabilityService';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { userId: string } }
-) {
+export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -19,6 +16,10 @@ export async function GET(
 
     await connectDB();
 
+    // Extract userId from URL
+    const url = new URL(request.url);
+    const segments = url.pathname.split('/');
+    const userId = segments[segments.length - 1];
     // Get current user
     const currentUser = await User.findOne({ email: session.user.email });
     if (!currentUser) {
@@ -37,7 +38,7 @@ export async function GET(
     }
 
     // Check if the other user exists
-    const otherUser = await User.findById(params.userId);
+    const otherUser = await User.findById(userId);
     if (!otherUser) {
       return NextResponse.json({ error: 'Other user not found' }, { status: 404 });
     }
@@ -47,7 +48,7 @@ export async function GET(
 
     const commonSlots = await availabilityService.getCommonAvailability(
       currentUser._id.toString(),
-      params.userId,
+      userId,
       new Date(startDate),
       new Date(endDate)
     );
