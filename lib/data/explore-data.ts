@@ -33,8 +33,8 @@ export const users: User[] = [
     name: "Aisha Patel",
     level: 1,
     avatar: "👩🏻",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["Python", "Data Science"],
+    teaches: ["Python", "Machine Learning"],
     bgColor: "#ffebf0",    // Pink background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#ff88b0" // Pink button
@@ -44,8 +44,8 @@ export const users: User[] = [
     name: "Marcus Johnson", 
     level: 1,
     avatar: "👨🏼",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["JavaScript", "React"],
+    teaches: ["JavaScript", "Web Dev"],
     bgColor: "#fff4e6",    // Yellow/orange background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#ffb347" // Orange button
@@ -55,8 +55,8 @@ export const users: User[] = [
     name: "Sophia Chen",
     level: 1,
     avatar: "👨🏻",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["Java", "Spring"],
+    teaches: ["Java", "Backend"],
     bgColor: "#e6f7ff",    // Light blue background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#66c7ff" // Blue button
@@ -66,8 +66,8 @@ export const users: User[] = [
     name: "Raj Mehta",
     level: 1,
     avatar: "🧑🏽",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["UI/UX", "Figma"],
+    teaches: ["Design", "Prototyping"],
     bgColor: "#e6ffed",    // Light green background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#4cd964" // Green button
@@ -77,8 +77,8 @@ export const users: User[] = [
     name: "Emma Thompson",
     level: 1,
     avatar: "👨🏼",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["DevOps", "Docker"],
+    teaches: ["Kubernetes", "CI/CD"],
     bgColor: "#fff9e6",    // Light yellow background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#ffda79" // Yellow button
@@ -88,8 +88,8 @@ export const users: User[] = [
     name: "Alex Rodriguez",
     level: 1,
     avatar: "🧑🏻‍💻",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["C++", "Algorithms"],
+    teaches: ["Data Structures", "Problem Solving"],
     bgColor: "#f0e6ff",    // Light purple background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#d4a5ff" // Purple button
@@ -99,8 +99,8 @@ export const users: User[] = [
     name: "Priya Sharma",
     level: 1,
     avatar: "👨🏽",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["Flutter", "Dart"],
+    teaches: ["Mobile Dev", "UI Design"],
     bgColor: "#e6fff2",    // Mint green background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#5ae9aa" // Green button
@@ -110,8 +110,8 @@ export const users: User[] = [
     name: "David Kim",
     level: 1,
     avatar: "👨🏻",
-    knows: ["Python", "Python"],
-    teaches: ["Python", "Python"],
+    knows: ["TypeScript", "Next.js"],
+    teaches: ["React", "Full Stack"],
     bgColor: "#e6f0ff",    // Very light blue background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#80bdff" // Light blue button
@@ -127,12 +127,12 @@ export const chatMessages: ChatMessage[] = [
   },
   {
     id: 2,
-    text: "I'm looking to learn Python for data science",
+    text: "I need to learn programming skills for my new job",
     isBot: false
   },
   {
     id: 3,
-    text: "Great! I'll find some experts in Python and data science for you",
+    text: "Great! I'll find experts in various programming skills for you",
     isBot: true
   },
   {
@@ -144,8 +144,8 @@ export const chatMessages: ChatMessage[] = [
 
 // Suggested users data
 export const suggestedUsers: SuggestedUser[] = [
-  { id: 1, name: "Aisha Patel", avatar: "👩🏻", skill: "Python" },
-  { id: 6, name: "Alex Rodriguez", avatar: "🧑🏻‍💻", skill: "Python" },
-  { id: 2, name: "Marcus Johnson", avatar: "🧑🏼", skill: "Python" },
-  { id: 7, name: "Priya Sharma", avatar: "👨🏽", skill: "Python" }
+  { id: 1, name: "Aisha Patel", avatar: "👩🏻", skill: "Data Science" },
+  { id: 6, name: "Alex Rodriguez", avatar: "🧑🏻‍💻", skill: "Algorithms" },
+  { id: 2, name: "Marcus Johnson", avatar: "🧑🏼", skill: "JavaScript" },
+  { id: 7, name: "Priya Sharma", avatar: "👨🏽", skill: "Mobile Dev" }
 ];

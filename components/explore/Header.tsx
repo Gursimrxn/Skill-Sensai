@@ -22,7 +22,9 @@ export const Header: React.FC = () => {
                     <span>Level 1</span>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
-                    <span className="text-white">👤</span>
+            <Image src="/profile.png" alt="Profile" width={32} height={32}>
+              
+                    </Image>
                 </div>
             </div>
         </header>

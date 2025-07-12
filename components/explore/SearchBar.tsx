@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -26,7 +25,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           type="text"
           value={searchQuery}
           onChange={onSearchQueryChange}
-          className="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent font-urbanist"
+          className="w-full pl-12 pr-4 py-3 text-black bg-white rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent font-urbanist"
           placeholder="Search skills..."
         />
       </div>
@@ -35,7 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <select
           value={availability}
           onChange={onAvailabilityChange}
-          className="px-6 py-3 bg-white rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent font-urbanist appearance-none pr-10"
+          className="px-6 py-3 bg-white text-black rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent font-urbanist appearance-none pr-10"
         >
           <option>Availability</option>
           <option>Available Now</option>

@@ -14,17 +14,16 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index, onRequest }) =>
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      className="rounded-[20px] p-5"
-      style={{ backgroundColor: user.cardColor }}
+      className="rounded-[20px] bg-black/5 p-5 font-bold"
     >
       {/* User Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-pink-200 text-xl">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-[${user.bgColor}] text-xl`}>
             {user.avatar}
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">{user.name}</h3>
+            <h3 className="text-xl font-bold font-urbanist text-gray-900">{user.name}</h3>
           </div>
         </div>
         <div className="bg-black text-white px-3 py-1 rounded-full text-xs font-medium">

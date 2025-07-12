@@ -19,7 +19,7 @@ import {
 
 export default function ExplorePage() {
   // State for search and filters
-  const [searchQuery, setSearchQuery] = useState("Python");
+  const [searchQuery, setSearchQuery] = useState("");
   const [availability, setAvailability] = useState("Availability");
   const [chatInput, setChatInput] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users);
