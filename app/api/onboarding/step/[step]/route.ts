@@ -3,10 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../../lib/authOptions';
 import { DIContainer } from '../../../../../lib/di/container';
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { step: string } }
-) {
+export async function PUT(request: NextRequest, context: { params: Record<string, string> }) {
   try {
     const session = await getServerSession(authOptions);
     
@@ -14,7 +11,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const step = parseInt(params.step);
+    const step = parseInt(context.params.step);
     if (isNaN(step) || step < 1 || step > 3) {
       return NextResponse.json({ error: 'Invalid step' }, { status: 400 });
     }
