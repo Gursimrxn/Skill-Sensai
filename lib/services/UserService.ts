@@ -43,8 +43,14 @@ export class UserService implements IUserService {
     return await this.userRepository.update(userId, {
       onboardingCompleted: true,
       skills: data.skills as string[],
+      skillsToLearn: data.skillsToLearn as string[],
       resumeUrl: data.resumeUrl as string,
       level: data.level as number,
+      availability: data.availability as {
+        days: string[];
+        timeSlots: string[];
+        timezone: string;
+      },
     });
   }
 
@@ -54,5 +60,25 @@ export class UserService implements IUserService {
 
   async findByProviderId(provider: string, providerId: string): Promise<IUser | null> {
     return await this.userRepository.findByProviderId(provider, providerId);
+  }
+
+  async searchUsersBySkills(skills: string[], limit?: number): Promise<IUser[]> {
+    return await this.userRepository.searchBySkills(skills, limit);
+  }
+
+  async searchUsersBySkillsToLearn(skillsToLearn: string[], limit?: number): Promise<IUser[]> {
+    return await this.userRepository.searchBySkillsToLearn(skillsToLearn, limit);
+  }
+
+  async searchUsers(filters: {
+    skills?: string[];
+    skillsToLearn?: string[];
+    level?: number;
+    availability?: {
+      days?: string[];
+      timeSlots?: string[];
+    };
+  }, limit?: number): Promise<IUser[]> {
+    return await this.userRepository.searchUsers(filters, limit);
   }
 }

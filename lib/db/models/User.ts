@@ -8,9 +8,15 @@ export interface IUser extends Document {
   providerId: string;
   onboardingCompleted: boolean;
   skills?: string[];
+  skillsToLearn?: string[];
   swapGoals?: string[];
   resumeUrl?: string;
   level: number;
+  availability?: {
+    days: string[];
+    timeSlots: string[];
+    timezone: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,6 +49,9 @@ const UserSchema = new Schema<IUser>({
   skills: [{
     type: String,
   }],
+  skillsToLearn: [{
+    type: String,
+  }],
   swapGoals: [{
     type: String,
   }],
@@ -52,6 +61,18 @@ const UserSchema = new Schema<IUser>({
   level: {
     type: Number,
     default: 1,
+  },
+  availability: {
+    days: [{
+      type: String,
+      enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    }],
+    timeSlots: [{
+      type: String,
+    }],
+    timezone: {
+      type: String,
+    }
   },
 }, {
   timestamps: true,

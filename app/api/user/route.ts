@@ -27,6 +27,7 @@ export async function GET() {
         onboardingCompleted: false,
         level: 1,
         skills: [],
+        skillsToLearn: [],
         swapGoals: [],
       });
       await user.save();
@@ -41,7 +42,9 @@ export async function GET() {
         onboardingCompleted: user.onboardingCompleted,
         level: user.level,
         skills: user.skills,
+        skillsToLearn: user.skillsToLearn,
         swapGoals: user.swapGoals,
+        availability: user.availability,
       }
     });
   } catch (error) {
@@ -79,6 +82,9 @@ export async function PUT(request: NextRequest) {
         onboardingCompleted: user.onboardingCompleted,
         level: user.level,
         skills: user.skills,
+        skillsToLearn: user.skillsToLearn,
+        swapGoals: user.swapGoals,
+        availability: user.availability,
       }
     });
   } catch (error) {
