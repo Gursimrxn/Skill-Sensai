@@ -40,12 +40,12 @@ export default function TestPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Coming Soon!
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-gray-600 mb-4">
             We&apos;re working hard to bring you the best skill assessment experience. 
             The testing module will be available soon with:
           </p>
           
-          <div className="grid md:grid-cols-2 gap-4 mb-8 text-left">
+          <div className="grid md:grid-cols-2 gap-4 mb-4 text-left">
             <div className="bg-purple-50 p-4 rounded-lg">
               <div className="text-2xl mb-2">🎯</div>
               <h3 className="font-semibold text-gray-800 mb-1">Adaptive Testing</h3>

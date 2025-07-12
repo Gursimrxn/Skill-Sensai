@@ -93,7 +93,7 @@ export default function SwapStep({ userName, onNext, onBack }: SwapStepProps) {
           </motion.p>
 
           {/* Predefined Goals */}
-          <motion.div variants={fadeInUp} className="mb-8">
+          <motion.div variants={fadeInUp} className="mb-4">
             <h3 className="text-lg font-medium text-gray-700 mb-4">Popular Goals:</h3>
             <div className="flex flex-wrap justify-center gap-2 mb-6">
               {predefinedGoals.map((goal) => (

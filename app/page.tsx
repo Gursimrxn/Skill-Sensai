@@ -30,7 +30,7 @@ export default function Home() {
           {/* Hero Section */}
           <div className="mb-16">
             <Image
-              className="mx-auto mb-8 dark:invert"
+              className="mx-auto mb-4 dark:invert"
               src="/logo.png"
               alt="Skill Sensai logo"
               width={200}
@@ -43,7 +43,7 @@ export default function Home() {
                 Skill Sensai
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto">
               Master your skills, track your progress, and unlock your potential with personalized learning paths.
             </p>
           </div>

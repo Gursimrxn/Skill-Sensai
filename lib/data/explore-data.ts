@@ -26,6 +26,15 @@ export interface SuggestedUser {
   skill: string;
 }
 
+export interface Request {
+  id: number;
+  user: User;
+  skillOffered: string;
+  skillWanted: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  timestamp: string;
+}
+
 // Sample user data based on the image
 export const users: User[] = [
   {
@@ -148,4 +157,32 @@ export const suggestedUsers: SuggestedUser[] = [
   { id: 6, name: "Alex Rodriguez", avatar: "🧑🏻‍💻", skill: "Algorithms" },
   { id: 2, name: "Marcus Johnson", avatar: "🧑🏼", skill: "JavaScript" },
   { id: 7, name: "Priya Sharma", avatar: "👨🏽", skill: "Mobile Dev" }
+];
+
+// Sample request data
+export const sampleRequests: Request[] = [
+  {
+    id: 1,
+    user: users[0], // Aisha Patel
+    skillOffered: "Python",
+    skillWanted: "Python",
+    status: 'pending',
+    timestamp: "2025-07-12T10:00:00Z"
+  },
+  {
+    id: 2,
+    user: users[0], // Aisha Patel  
+    skillOffered: "Python",
+    skillWanted: "Python",
+    status: 'pending',
+    timestamp: "2025-07-12T09:30:00Z"
+  },
+  {
+    id: 3,
+    user: users[0], // Aisha Patel
+    skillOffered: "Python", 
+    skillWanted: "Python",
+    status: 'pending',
+    timestamp: "2025-07-12T09:00:00Z"
+  }
 ];

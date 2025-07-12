@@ -52,7 +52,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
               {userData.image && (
@@ -81,7 +81,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-3 gap-6 mb-4">
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="text-3xl mb-2">🎯</div>
             <h3 className="text-xl font-semibold text-gray-800 mb-1">Current Level</h3>
@@ -102,7 +102,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Skills */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Your Skills</h2>
           {userData.skills && userData.skills.length > 0 ? (
             <div className="flex flex-wrap gap-2">

@@ -14,7 +14,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onAvailabilityChange
 }) => {
   return (
-    <div className="flex gap-4 mb-8">
+    <div className="flex gap-4 mb-4">
       <div className="flex-1 relative">
         <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
           <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

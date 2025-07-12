@@ -14,7 +14,8 @@ import { Header } from '@/components/explore/Header';
 import { 
   users, 
   chatMessages, 
-  suggestedUsers 
+  suggestedUsers,
+  sampleRequests
 } from '@/lib/data/explore-data';
 
 export default function ExplorePage() {
@@ -23,6 +24,10 @@ export default function ExplorePage() {
   const [availability, setAvailability] = useState("Availability");
   const [chatInput, setChatInput] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users);
+  
+  // State for requests
+  const [sentRequests, setSentRequests] = useState(sampleRequests);
+  const [receivedRequests, setReceivedRequests] = useState(sampleRequests);
 
   // Filter users based on search query
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +67,30 @@ export default function ExplorePage() {
     }
   };
 
+  // Handle accepting a request
+  const handleAcceptRequest = (requestId: number) => {
+    console.log(`Accepting request ${requestId}`);
+    setReceivedRequests(prev => 
+      prev.map(request => 
+        request.id === requestId 
+          ? { ...request, status: 'accepted' as const }
+          : request
+      )
+    );
+  };
+
+  // Handle rejecting a request
+  const handleRejectRequest = (requestId: number) => {
+    console.log(`Rejecting request ${requestId}`);
+    setReceivedRequests(prev => 
+      prev.map(request => 
+        request.id === requestId 
+          ? { ...request, status: 'rejected' as const }
+          : request
+      )
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#fffbf7] font-urbanist">
       {/* Header */}
@@ -74,9 +103,9 @@ export default function ExplorePage() {
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-bold text-gray-900 mb-8 font-urbanist"
+            className="text-4xl font-bold text-gray-900 mb-4 font-urbanist"
           >
-            Hey Gursimran
+            Hey 
           </motion.h2>
 
           {/* Search and Filter Section */}
@@ -88,7 +117,7 @@ export default function ExplorePage() {
           />
 
           {/* User Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredUsers.map((user, index) => (
               <UserCard
                 key={user.id}
@@ -105,8 +134,12 @@ export default function ExplorePage() {
           chatMessages={chatMessages}
           suggestedUsers={suggestedUsers}
           chatInput={chatInput}
+          sentRequests={sentRequests}
+          receivedRequests={receivedRequests}
           onChatInputChange={(e) => setChatInput(e.target.value)}
           onSendMessage={handleSendMessage}
+          onAcceptRequest={handleAcceptRequest}
+          onRejectRequest={handleRejectRequest}
         />
       </div>
     </div>
