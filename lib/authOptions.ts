@@ -28,6 +28,12 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Redirect to /explore after successful login
+      if (url === baseUrl) return `${baseUrl}/explore`;
+      if (url.startsWith(baseUrl)) return url;
+      return `${baseUrl}/explore`;
+    },
   },
   pages: {
     signIn: '/',

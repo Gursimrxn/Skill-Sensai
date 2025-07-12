@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -104,24 +104,8 @@ export default function AdminPage() {
     setTimeout(() => setNotification(null), 5000);
   };
 
-  useEffect(() => {
-    setLoading(false);
-    loadStats();
-    
-    // Load data based on active tab
-    if (activeTab === 'users') {
-      loadUsers();
-    } else if (activeTab === 'swaps') {
-      loadSwaps();
-    } else if (activeTab === 'skills') {
-      loadSkills();
-    } else if (activeTab === 'messages') {
-      loadMessages();
-    }
-  }, [activeTab]);
-
   // API functions
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     // Calculate stats from existing data
     const totalUsers = users.length;
     const activeUsers = users.filter(u => !u.isBanned && u.onboardingCompleted).length;
@@ -140,9 +124,24 @@ export default function AdminPage() {
       pendingSwaps,
       messagesSent
     });
-  };
+  }, [users, skillDescriptions, swaps, messages]);
 
-  // API functions
+  useEffect(() => {
+    setLoading(false);
+    loadStats();
+    
+    // Load data based on active tab
+    if (activeTab === 'users') {
+      loadUsers();
+    } else if (activeTab === 'swaps') {
+      loadSwaps();
+    } else if (activeTab === 'skills') {
+      loadSkills();
+    } else if (activeTab === 'messages') {
+      loadMessages();
+    }
+  }, [activeTab, loadStats]);
+
   const loadUsers = async () => {
     try {
       const response = await fetch('/api/admin/users');
@@ -205,7 +204,7 @@ export default function AdminPage() {
       <div className="min-h-screen bg-[#fffbf7] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-gray-600">You don't have permission to access this page.</p>
+          <p className="text-gray-600">You don&apos;t have permission to access this page.</p>
         </div>
       </div>
     );
@@ -693,15 +692,21 @@ export default function AdminPage() {
                           <div className="flex gap-2">
                             <button
                               onClick={() => handleSkillAction(skill.id, 'approve')}
-                              className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition-colors"
+                              className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition-colors flex items-center gap-1"
                             >
-                              ✓ Approve
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                              </svg>
+                              Approve
                             </button>
                             <button
                               onClick={() => handleSkillAction(skill.id, 'reject')}
-                              className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors"
+                              className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors flex items-center gap-1"
                             >
-                              ✗ Reject
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
+                              </svg>
+                              Reject
                             </button>
                           </div>
                         )}
@@ -1138,9 +1143,9 @@ export default function AdminPage() {
                           onChange={(e) => setNewMessage(prev => ({ ...prev, targetUsers: e.target.value as any }))}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
                         >
-                          <option value="all">👥 All Users</option>
-                          <option value="active">✅ Active Users</option>
-                          <option value="new">🆕 New Users</option>
+                          <option value="all">All Users</option>
+                          <option value="active">Active Users</option>
+                          <option value="new">New Users</option>
                         </select>
                       </div>
                     </div>

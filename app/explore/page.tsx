@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 // Import components
@@ -115,13 +115,13 @@ export default function ExplorePage() {
   };
 
   // Refresh both sent and received lists
-  const refreshConnections = () => {
+  const refreshConnections = useCallback(() => {
     fetchConnections('sent');
     fetchConnections('received');
-  };
+  }, []);
 
   // Load connections on mount
-  useEffect(() => { refreshConnections(); }, []);
+  useEffect(() => { refreshConnections(); }, [refreshConnections]);
   
   return (
     <div className="min-h-screen bg-[#fffbf7] font-urbanist">

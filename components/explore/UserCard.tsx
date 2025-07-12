@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from '@/lib/data/explore-data';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 interface UserCardProps {
@@ -24,7 +24,13 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index, onRequest }) =>
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
             {user.image ? (
-              <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+              <Image 
+                src={user.image} 
+                alt={user.name} 
+                width={40} 
+                height={40} 
+                className="w-full h-full object-cover" 
+              />
             ) : (
               <span className="flex items-center justify-center w-full h-full bg-gray-300 text-xl text-white">
                 {user.name.charAt(0)}

@@ -7,7 +7,7 @@ import { User } from '../../../../lib/db/models/User';
 const ADMIN_EMAIL = 'sgursimranmatharu@gmail.com';
 
 // Check if user is admin
-async function isAdmin(request: NextRequest) {
+async function isAdmin() {
   const session = await getServerSession(authOptions);
   return session?.user?.email === ADMIN_EMAIL;
 }
@@ -15,7 +15,7 @@ async function isAdmin(request: NextRequest) {
 // GET /api/admin/skills - Get skill data for review (using user skills for now)
 export async function GET(request: NextRequest) {
   try {
-    if (!(await isAdmin(request))) {
+    if (!(await isAdmin())) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
-    const total = await User.countDocuments({ onboardingCompleted: true });
+    await User.countDocuments({ onboardingCompleted: true });
 
     // Transform user skills into reviewable format
     const skillData = users.flatMap((user: any) => 
@@ -79,15 +79,14 @@ export async function GET(request: NextRequest) {
 // PUT /api/admin/skills - Handle skill moderation (simplified for now)
 export async function PUT(request: NextRequest) {
   try {
-    if (!(await isAdmin(request))) {
+    if (!(await isAdmin())) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const session = await getServerSession(authOptions);
     await connectDB();
 
     const body = await request.json();
-    const { skillId, action, reason } = body;
+    const { skillId, action } = body;
 
     if (!skillId || !action) {
       return NextResponse.json(

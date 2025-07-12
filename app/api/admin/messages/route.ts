@@ -5,18 +5,18 @@ import { authOptions } from '../../../../lib/authOptions';
 const ADMIN_EMAIL = 'sgursimranmatharu@gmail.com';
 
 // Check if user is admin
-async function isAdmin(request: NextRequest) {
+async function isAdmin() {
   const session = await getServerSession(authOptions);
   return session?.user?.email === ADMIN_EMAIL;
 }
 
 // For now, store messages in memory (in production, use database)
-let platformMessages: any[] = [];
+const platformMessages: any[] = [];
 
 // GET /api/admin/messages - Get all platform messages
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    if (!(await isAdmin(request))) {
+    if (!(await isAdmin())) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 // POST /api/admin/messages - Send platform message
 export async function POST(request: NextRequest) {
   try {
-    if (!(await isAdmin(request))) {
+    if (!(await isAdmin())) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
