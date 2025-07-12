@@ -85,7 +85,7 @@ View the full design on Figma:
 ## 👥 Team
 
 Built with 💡 by **Team Skill Sensei**  
-Members: [Gursimran Singh | Ekaspreet singh Atwal | Aagam Jain | Jashanjot Singh]
+Members: Gursimran Singh | Ekaspreet singh Atwal | Aagam Jain | Jashanjot Singh
 
 ---
 
