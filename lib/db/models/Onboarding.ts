@@ -9,6 +9,11 @@ export interface IOnboarding extends Document {
       skills?: string[];
       completedAt?: Date;
     };
+    swap: {
+      completed: boolean;
+      swapGoals?: string[];
+      completedAt?: Date;
+    };
     resume: {
       completed: boolean;
       resumeUrl?: string;
@@ -36,12 +41,17 @@ const OnboardingSchema = new Schema<IOnboarding>({
     type: Number,
     default: 1,
     min: 1,
-    max: 3,
+    max: 4,
   },
   steps: {
     welcome: {
       completed: { type: Boolean, default: false },
       skills: [{ type: String }],
+      completedAt: { type: Date },
+    },
+    swap: {
+      completed: { type: Boolean, default: false },
+      swapGoals: [{ type: String }],
       completedAt: { type: Date },
     },
     resume: {

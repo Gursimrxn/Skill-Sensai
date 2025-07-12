@@ -16,7 +16,7 @@ export async function PUT(
 
     const resolvedParams = await params;
     const step = parseInt(resolvedParams.step);
-    if (isNaN(step) || step < 1 || step > 3) {
+    if (isNaN(step) || step < 1 || step > 4) {
       return NextResponse.json({ error: 'Invalid step' }, { status: 400 });
     }
 

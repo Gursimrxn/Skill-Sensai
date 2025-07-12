@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { AnimatePresence } from 'framer-motion';
 import WelcomeStep from './WelcomeStep';
+import SwapStep from './SwapStep';
 import ResumeStep from './ResumeStep';
 import LevelStep from './LevelStep';
 
@@ -15,6 +16,7 @@ interface UserData {
   onboardingCompleted: boolean;
   level: number;
   skills: string[];
+  swapGoals?: string[];
 }
 
 export default function OnboardingContainer() {
@@ -23,6 +25,7 @@ export default function OnboardingContainer() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [stepData, setStepData] = useState({
     skills: [] as string[],
+    swapGoals: [] as string[],
     resumeUrl: '',
     level: 1,
   });
@@ -51,7 +54,7 @@ export default function OnboardingContainer() {
     }
   }, [status, session]);
 
-  const handleStepComplete = (step: number, data: { skills?: string[]; resumeUrl?: string; level?: number }) => {
+  const handleStepComplete = (step: number, data: { skills?: string[]; swapGoals?: string[]; resumeUrl?: string; level?: number; extractedSkills?: string[] }) => {
     // Instant UI updates - no waiting for API
     switch (step) {
       case 1:
@@ -65,21 +68,45 @@ export default function OnboardingContainer() {
         }).catch(() => {});
         break;
       case 2:
-        setStepData(prev => ({ ...prev, resumeUrl: data.resumeUrl ?? '' }));
+        setStepData(prev => ({ ...prev, swapGoals: data.swapGoals ?? [] }));
         setCurrentStep(3);
         // Fire and forget API call
         fetch('/api/user', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ resumeUrl: data.resumeUrl }),
+          body: JSON.stringify({ swapGoals: data.swapGoals }),
         }).catch(() => {});
         break;
       case 3:
+        // Merge extracted skills with existing skills
+        const allSkills = data.extractedSkills ? 
+          [...new Set([...stepData.skills, ...data.extractedSkills])] : 
+          stepData.skills;
+        
+        setStepData(prev => ({ 
+          ...prev, 
+          resumeUrl: data.resumeUrl ?? '',
+          skills: allSkills
+        }));
+        setCurrentStep(4);
+        
+        // Fire and forget API call with merged skills
+        fetch('/api/user', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            resumeUrl: data.resumeUrl,
+            skills: allSkills
+          }),
+        }).catch(() => {});
+        break;
+      case 4:
         // Complete onboarding immediately
         const finalData = {
           level: data.level,
           onboardingCompleted: true,
           skills: stepData.skills,
+          swapGoals: stepData.swapGoals,
           resumeUrl: stepData.resumeUrl,
         };
         
@@ -97,12 +124,16 @@ export default function OnboardingContainer() {
     handleStepComplete(1, { skills });
   };
 
-  const handleResumeNext = (resumeUrl: string) => {
-    handleStepComplete(2, { resumeUrl });
+  const handleSwapNext = (swapGoals: string[]) => {
+    handleStepComplete(2, { swapGoals });
+  };
+
+  const handleResumeNext = (resumeUrl: string, extractedSkills?: string[]) => {
+    handleStepComplete(3, { resumeUrl, extractedSkills });
   };
 
   const handleLevelComplete = (level: number) => {
-    handleStepComplete(3, { level });
+    handleStepComplete(4, { level });
   };
 
   const handleBack = () => {
@@ -128,13 +159,21 @@ export default function OnboardingContainer() {
           />
         )}
         {currentStep === 2 && (
+          <SwapStep
+            key="swap"
+            userName={userName}
+            onNext={handleSwapNext}
+            onBack={handleBack}
+          />
+        )}
+        {currentStep === 3 && (
           <ResumeStep
             key="resume"
             onNext={handleResumeNext}
             onBack={handleBack}
           />
         )}
-        {currentStep === 3 && (
+        {currentStep === 4 && (
           <LevelStep
             key="level"
             onComplete={handleLevelComplete}

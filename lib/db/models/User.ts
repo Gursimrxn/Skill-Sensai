@@ -8,6 +8,7 @@ export interface IUser extends Document {
   providerId: string;
   onboardingCompleted: boolean;
   skills?: string[];
+  swapGoals?: string[];
   resumeUrl?: string;
   level: number;
   createdAt: Date;
@@ -40,6 +41,9 @@ const UserSchema = new Schema<IUser>({
     default: false,
   },
   skills: [{
+    type: String,
+  }],
+  swapGoals: [{
     type: String,
   }],
   resumeUrl: {

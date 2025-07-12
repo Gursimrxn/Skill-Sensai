@@ -27,6 +27,7 @@ export async function GET() {
         onboardingCompleted: false,
         level: 1,
         skills: [],
+        swapGoals: [],
       });
       await user.save();
     }
@@ -40,6 +41,7 @@ export async function GET() {
         onboardingCompleted: user.onboardingCompleted,
         level: user.level,
         skills: user.skills,
+        swapGoals: user.swapGoals,
       }
     });
   } catch (error) {

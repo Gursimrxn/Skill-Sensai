@@ -6,7 +6,7 @@ import { fadeInUp, staggerContainer } from '../animations/variants';
 import axios from 'axios';
 
 interface ResumeStepProps {
-  onNext: (resumeUrl: string) => void;
+  onNext: (resumeUrl: string, extractedSkills?: string[]) => void;
   onBack: () => void;
 }
 
@@ -140,7 +140,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
       // Simulate upload - in real app, upload to your server/cloud storage
       await new Promise(resolve => setTimeout(resolve, 2000));
       const mockResumeUrl = `https://example.com/resumes/${uploadedFile.name}`;
-      onNext(mockResumeUrl);
+      onNext(mockResumeUrl, skills); // Pass extracted skills
     } catch (error) {
       console.error('Upload or skill extraction failed:', error);
       alert('Upload or skill extraction failed. Please try again.');
@@ -150,7 +150,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
   };
 
   const handleSkip = () => {
-    onNext(''); // Skip with empty URL
+    onNext('', []); // Skip with empty URL and no skills
   };
 
   return (
@@ -159,7 +159,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-100 p-8"
+      className="min-h-screen flex items-center justify-center bg-surface-primary p-8"
     >
       <div className="w-full max-w-2xl">
         <motion.div variants={fadeInUp} className="text-center mb-12">
@@ -175,10 +175,10 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
           <div
             className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200 ${
               isDragging
-                ? 'border-purple-500 bg-purple-50'
+                ? 'border-[#ff88b0] bg-[#fff0f5]'
                 : uploadedFile
-                ? 'border-green-500 bg-green-50'
-                : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'
+                ? 'border-[#22c55e] bg-[#f0fdf4]'
+                : 'border-[#d1d5db] hover:border-[#ff88b0] hover:bg-[#fafafa]'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -208,7 +208,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
                 </p>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="text-purple-600 hover:text-purple-700 font-medium"
+                  className="text-[#ff88b0] hover:text-[#ff6ba0] font-medium"
                 >
                   Choose different file
                 </button>
@@ -223,7 +223,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
                   or{' '}
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="text-purple-600 hover:text-purple-700 font-medium"
+                    className="text-[#ff88b0] hover:text-[#ff6ba0] font-medium"
                   >
                     browse to upload
                   </button>
@@ -242,14 +242,14 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <h4 className="text-lg font-semibold text-purple-700 mb-3">
+              <h4 className="text-lg font-semibold text-[#ff88b0] mb-3">
                 Extracted Skills:
               </h4>
               <div className="flex flex-wrap gap-2">
                 {extractedSkills.map((skill, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium"
+                    className="px-3 py-1 bg-[#ff88b0] text-white rounded-full text-sm font-medium"
                   >
                     {skill}
                   </span>
@@ -261,7 +261,7 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
           <motion.div variants={fadeInUp} className="flex justify-between mt-8">
             <button
               onClick={onBack}
-              className="px-6 py-3 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+              className="px-6 py-3 text-[#6b7280] hover:text-[#374151] font-medium transition-colors"
             >
               ← Back
             </button>
@@ -269,14 +269,14 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
             <div className="flex gap-3">
               <button
                 onClick={handleSkip}
-                className="px-6 py-3 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                className="px-6 py-3 text-[#6b7280] hover:text-[#374151] font-medium transition-colors"
               >
                 Skip for now
               </button>
               <button
                 onClick={handleUpload}
                 disabled={!uploadedFile || isUploading}
-                className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl flex items-center gap-2"
+                className="px-8 py-3 bg-[#ff88b0] text-white rounded-lg hover:bg-[#ff6ba0] disabled:bg-[#d1d5db] disabled:cursor-not-allowed transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl flex items-center gap-2"
               >
                 {isUploading ? (
                   <>

@@ -28,6 +28,7 @@ export class OnboardingService implements IOnboardingService {
       currentStep: 1,
       steps: {
         welcome: { completed: false },
+        swap: { completed: false },
         resume: { completed: false },
         levelAssignment: { completed: false },
       },
@@ -39,10 +40,11 @@ export class OnboardingService implements IOnboardingService {
     const onboarding = await this.onboardingRepository.updateStep(userId, step, data);
     
     // If this is the final step, also update the user record
-    if (step === 3 && onboarding) {
+    if (step === 4 && onboarding) {
       await this.userRepository.update(userId, {
         onboardingCompleted: true,
         skills: onboarding.steps.welcome.skills,
+        swapGoals: onboarding.steps.swap.swapGoals,
         resumeUrl: onboarding.steps.resume.resumeUrl,
         level: onboarding.steps.levelAssignment.level,
       });
