@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChatMessage, SuggestedUser, User, Request } from '@/lib/data/explore-data';
+import { ChatMessage, SuggestedUser, Request } from '@/lib/data/explore-data';
 import { motion } from 'framer-motion';
 
 interface ChatSidebarProps {
@@ -15,7 +15,7 @@ interface ChatSidebarProps {
 }
 
 export const ChatSidebar: React.FC<ChatSidebarProps> = ({
-  chatMessages,
+  
   suggestedUsers,
   chatInput,
   sentRequests,

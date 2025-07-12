@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-
 
 // Import components
 import { UserCard } from '@/components/explore/UserCard';
@@ -10,52 +9,53 @@ import { ChatSidebar } from '@/components/explore/ChatSidebar';
 import { SearchBar } from '@/components/explore/SearchBar';
 import { Header } from '@/components/explore/Header';
 
-// Import data
-import { 
-  users, 
-  chatMessages, 
-  suggestedUsers,
-  sampleRequests
-} from '@/lib/data/explore-data';
-
 export default function ExplorePage() {
   // State for search and filters
   const [searchQuery, setSearchQuery] = useState("");
   const [availability, setAvailability] = useState("Availability");
   const [chatInput, setChatInput] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState(users);
-  
-  // State for requests
-  const [sentRequests, setSentRequests] = useState(sampleRequests);
-  const [receivedRequests, setReceivedRequests] = useState(sampleRequests);
+  const [usersList, setUsersList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Filter users based on search query
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    
-    if (query.trim() === '') {
-      setFilteredUsers(users);
-    } else {
-      const filtered = users.filter(user => {
-        // Check if query matches any skills or name
-        const matchesName = user.name.toLowerCase().includes(query.toLowerCase());
-        const matchesKnows = user.knows.some(skill => 
-          skill.toLowerCase().includes(query.toLowerCase())
-        );
-        const matchesTeaches = user.teaches.some(skill => 
-          skill.toLowerCase().includes(query.toLowerCase())
-        );
-        return matchesName || matchesKnows || matchesTeaches;
-      });
-      setFilteredUsers(filtered);
+  // State for connection requests
+  const [sentRequests, setSentRequests] = useState<any[]>([]);
+  const [receivedRequests, setReceivedRequests] = useState<any[]>([]);
+
+  // Fetch users from search API
+  const fetchUsers = async (query: string = '') => {
+    setLoading(true);
+    try {
+      const resp = await fetch(`/api/user/search?skills=${encodeURIComponent(query)}`);
+      const data = await resp.json();
+      setUsersList(data.users || []);
+    } catch (err) {
+      console.error('Error fetching users:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle sending a request to connect with a user
-  const handleRequest = (userId: number) => {
-    console.log(`Request sent to user ${userId}`);
-    // In a real app, this would call an API
+  // Handle search input change and call API
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    fetchUsers(query);
+  };
+
+  // Handle sending a new connection request
+  const handleRequest = async (userId: number) => {
+    try {
+      const resp = await fetch('/api/connections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipientId: userId.toString(), connectionType: 'skill-swap', message: '', skillsOffered: [], skillsRequested: [] })
+      });
+      if (resp.ok) {
+        await refreshConnections();
+      }
+    } catch (err) {
+      console.error('Error sending connection request:', err);
+    }
   };
 
   // Handle sending a chat message
@@ -67,30 +67,62 @@ export default function ExplorePage() {
     }
   };
 
-  // Handle accepting a request
-  const handleAcceptRequest = (requestId: number) => {
-    console.log(`Accepting request ${requestId}`);
-    setReceivedRequests(prev => 
-      prev.map(request => 
-        request.id === requestId 
-          ? { ...request, status: 'accepted' as const }
-          : request
-      )
-    );
+  // Handle accepting a connection request
+  const handleAcceptRequest = async (requestId: number) => {
+    try {
+      const resp = await fetch(`/api/connections/${requestId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'accept' })
+      });
+      if (resp.ok) {
+        await refreshConnections();
+      }
+    } catch (err) {
+      console.error('Error accepting request:', err);
+    }
   };
 
-  // Handle rejecting a request
-  const handleRejectRequest = (requestId: number) => {
-    console.log(`Rejecting request ${requestId}`);
-    setReceivedRequests(prev => 
-      prev.map(request => 
-        request.id === requestId 
-          ? { ...request, status: 'rejected' as const }
-          : request
-      )
-    );
+  // Handle rejecting a connection request
+  const handleRejectRequest = async (requestId: number) => {
+    try {
+      const resp = await fetch(`/api/connections/${requestId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'decline' })
+      });
+      if (resp.ok) {
+        await refreshConnections();
+      }
+    } catch (err) {
+      console.error('Error rejecting request:', err);
+    }
   };
 
+  // Initial load
+  useEffect(() => { fetchUsers(); }, []);
+
+  // Functions to fetch connection lists
+  const fetchConnections = async (type: 'sent' | 'received') => {
+    try {
+      const resp = await fetch(`/api/connections?type=${type}`);
+      const data = await resp.json();
+      if (type === 'sent') setSentRequests(data.connections || []);
+      else setReceivedRequests(data.connections || []);
+    } catch (err) {
+      console.error('Error fetching connections:', err);
+    }
+  };
+
+  // Refresh both sent and received lists
+  const refreshConnections = () => {
+    fetchConnections('sent');
+    fetchConnections('received');
+  };
+
+  // Load connections on mount
+  useEffect(() => { refreshConnections(); }, []);
+  
   return (
     <div className="min-h-screen bg-[#fffbf7] font-urbanist">
       {/* Header */}
@@ -100,16 +132,16 @@ export default function ExplorePage() {
         {/* Main Content */}
         <div className="flex-1 px-6 py-8 overflow-y-auto">
           {/* Greeting */}
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl font-bold text-gray-900 mb-4 font-urbanist"
           >
-            Hey 
+            Hey
           </motion.h2>
 
           {/* Search and Filter Section */}
-          <SearchBar 
+          <SearchBar
             searchQuery={searchQuery}
             availability={availability}
             onSearchQueryChange={handleSearchChange}
@@ -117,30 +149,34 @@ export default function ExplorePage() {
           />
 
           {/* User Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredUsers.map((user, index) => (
-              <UserCard
-                key={user.id}
-                user={user}
-                index={index}
-                onRequest={handleRequest}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <p>Loading users...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {usersList.map((user, index) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  index={index}
+                  onRequest={handleRequest}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Chat Sidebar */}
         <ChatSidebar
-          chatMessages={chatMessages}
-          suggestedUsers={suggestedUsers}
-          chatInput={chatInput}
+          chatMessages={[]}
+          suggestedUsers={[]}
+           chatInput={chatInput}
           sentRequests={sentRequests}
           receivedRequests={receivedRequests}
-          onChatInputChange={(e) => setChatInput(e.target.value)}
-          onSendMessage={handleSendMessage}
-          onAcceptRequest={handleAcceptRequest}
-          onRejectRequest={handleRejectRequest}
-        />
+           onChatInputChange={(e) => setChatInput(e.target.value)}
+           onSendMessage={handleSendMessage}
+           onAcceptRequest={handleAcceptRequest}
+           onRejectRequest={handleRejectRequest}
+         />
       </div>
     </div>
   );
