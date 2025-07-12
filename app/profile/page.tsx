@@ -23,7 +23,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       if (status === 'unauthenticated') {
-        router.push('/');
+        window.location.href = '/';
         return;
       }
 
@@ -34,11 +34,7 @@ export default function ProfilePage() {
             const data = await response.json();
             setUserData(data.user);
             
-            // If onboarding is not completed, redirect to onboarding
-            if (!data.user.onboardingCompleted) {
-              router.push('/onboarding');
-              return;
-            }
+            // Don't redirect anymore - let user access profile even without onboarding
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -48,7 +44,7 @@ export default function ProfilePage() {
     };
 
     fetchUserData();
-  }, [status, session, router]);
+  }, [status, session]);
 
   if (status === 'loading' || loading) {
     return (

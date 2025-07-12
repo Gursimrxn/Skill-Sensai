@@ -4,7 +4,7 @@ import { authOptions } from '../auth/[...nextauth]/route';
 import connectDB from '../../../lib/db/connection';
 import { User } from '../../../lib/db/models/User';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     

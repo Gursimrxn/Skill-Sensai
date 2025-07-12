@@ -16,31 +16,22 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn() {
       return true;
     },
     async session({ session, user }) {
       // Add custom fields to session from database user
       if (session?.user && user) {
         session.user.id = user.id;
-        session.user.onboardingCompleted = (user as any).onboardingCompleted || false;
-        session.user.level = (user as any).level || 1;
-        session.user.skills = (user as any).skills || [];
+        session.user.onboardingCompleted = (user as { onboardingCompleted?: boolean }).onboardingCompleted || false;
+        session.user.level = (user as { level?: number }).level || 1;
+        session.user.skills = (user as { skills?: string[] }).skills || [];
       }
       return session;
-    },
-    async redirect({ url, baseUrl }) {
-      // If there's a callbackUrl, use it
-      if (url.startsWith(baseUrl)) {
-        return url;
-      }
-      // Default redirect to onboarding
-      return `${baseUrl}/onboarding`;
     },
   },
   pages: {
     signIn: '/',
-    error: '/',
   },
   session: {
     strategy: 'database',

@@ -1,27 +1,21 @@
 'use client';
 
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
 import { useEffect } from 'react';
 import Image from "next/image";
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const router = useRouter();
 
   useEffect(() => {
+    // Automatic redirect after sign in
     if (status === 'authenticated' && session?.user) {
-      // Check if onboarding is completed
-      if (!session.user.onboardingCompleted) {
-        router.push('/onboarding');
-      } else {
-        router.push('/profile');
-      }
+      window.location.href = '/onboarding';
     }
-  }, [session, status, router]);
+  }, [status, session]);
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/onboarding' });
+    signIn('google');
   };
 
   if (status === 'loading') {
@@ -39,13 +33,8 @@ export default function Home() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Redirecting...</p>
-          <button
-            onClick={() => signOut()}
-            className="text-blue-600 hover:text-blue-700"
-          >
-            Sign out
-          </button>
+          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Redirecting to onboarding...</p>
         </div>
       </div>
     );

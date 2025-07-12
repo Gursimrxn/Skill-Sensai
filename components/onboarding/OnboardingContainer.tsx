@@ -34,7 +34,7 @@ export default function OnboardingContainer() {
   useEffect(() => {
     const fetchUserData = async () => {
       if (status === 'unauthenticated') {
-        router.push('/');
+        window.location.href = '/';
         return;
       }
 
@@ -45,11 +45,8 @@ export default function OnboardingContainer() {
             const data = await response.json();
             setUserData(data.user);
             
-            // If onboarding is completed, redirect to profile
-            if (data.user.onboardingCompleted) {
-              router.push('/profile');
-              return;
-            }
+            // Check if onboarding is completed - if so, allow access but show different UI
+            // Don't redirect anymore, let user access onboarding multiple times if needed
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -59,57 +56,43 @@ export default function OnboardingContainer() {
     };
 
     fetchUserData();
-  }, [status, session, router]);
+  }, [status, session]);
 
   const handleStepComplete = async (step: number, data: any) => {
     try {
-      let updateData: any = {};
-      
+      // Update step data locally
       switch (step) {
         case 1:
-          updateData = { skills: data.skills };
           setStepData(prev => ({ ...prev, skills: data.skills }));
           setCurrentStep(2);
           break;
         case 2:
-          updateData = { resumeUrl: data.resumeUrl };
           setStepData(prev => ({ ...prev, resumeUrl: data.resumeUrl }));
           setCurrentStep(3);
           break;
         case 3:
-          updateData = { 
+          // Complete onboarding and update user
+          const finalData = {
             level: data.level,
             onboardingCompleted: true,
             skills: stepData.skills,
             resumeUrl: stepData.resumeUrl,
           };
           
-          // Update user data
           const response = await fetch('/api/user', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(updateData),
+            body: JSON.stringify(finalData),
           });
           
           if (response.ok) {
-            // Onboarding completed - redirect will be handled by the component
+            // Onboarding completed - handled by LevelStep component
             return;
           } else {
             throw new Error('Failed to complete onboarding');
           }
-      }
-      
-      // Update user for steps 1 and 2
-      if (step < 3) {
-        await fetch('/api/user', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updateData),
-        });
       }
     } catch (error) {
       console.error('Error updating onboarding step:', error);

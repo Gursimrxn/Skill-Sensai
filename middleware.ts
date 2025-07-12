@@ -7,13 +7,8 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ token, req }) => {
-        // Allow access to home page and API routes
-        if (req.nextUrl.pathname === '/' || req.nextUrl.pathname.startsWith('/api/')) {
-          return true;
-        }
-        
-        // Require authentication for all other pages
-        return !!token;
+        // Allow access to all pages - remove blocking
+        return true;
       },
     },
   }
