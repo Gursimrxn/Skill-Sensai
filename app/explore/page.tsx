@@ -26,7 +26,7 @@ export default function ExplorePage() {
   const [filteredUsers, setFilteredUsers] = useState(users);
   
   // State for requests
-  const [sentRequests, setSentRequests] = useState(sampleRequests);
+  const sentRequests = sampleRequests;
   const [receivedRequests, setReceivedRequests] = useState(sampleRequests);
 
   // Filter users based on search query
