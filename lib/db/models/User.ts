@@ -17,6 +17,9 @@ export interface IUser extends Document {
     timeSlots: string[];
     timezone: string;
   };
+  isBanned?: boolean;
+  banReason?: string;
+  bannedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -73,6 +76,16 @@ const UserSchema = new Schema<IUser>({
     timezone: {
       type: String,
     }
+  },
+  isBanned: {
+    type: Boolean,
+    default: false,
+  },
+  banReason: {
+    type: String,
+  },
+  bannedAt: {
+    type: Date,
   },
 }, {
   timestamps: true,
