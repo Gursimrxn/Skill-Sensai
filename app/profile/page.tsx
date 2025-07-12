@@ -2,21 +2,55 @@
 
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+interface UserData {
+  id: string;
+  email: string;
+  name: string;
+  image?: string;
+  onboardingCompleted: boolean;
+  level: number;
+  skills: string[];
+}
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-    } else if (status === 'authenticated' && !session?.user?.onboardingCompleted) {
-      router.push('/onboarding');
-    }
+    const fetchUserData = async () => {
+      if (status === 'unauthenticated') {
+        router.push('/');
+        return;
+      }
+
+      if (status === 'authenticated' && session?.user?.email) {
+        try {
+          const response = await fetch('/api/user');
+          if (response.ok) {
+            const data = await response.json();
+            setUserData(data.user);
+            
+            // If onboarding is not completed, redirect to onboarding
+            if (!data.user.onboardingCompleted) {
+              router.push('/onboarding');
+              return;
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchUserData();
   }, [status, session, router]);
 
-  if (status === 'loading') {
+  if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -27,7 +61,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!session?.user) {
+  if (!userData) {
     return null;
   }
 
@@ -38,18 +72,18 @@ export default function ProfilePage() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-              {session.user.image && (
+              {userData.image && (
                 <img
-                  src={session.user.image}
+                  src={userData.image}
                   alt="Profile"
                   className="w-16 h-16 rounded-full"
                 />
               )}
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  Welcome back, {session.user.name}!
+                  Welcome back, {userData.name}!
                 </h1>
-                <p className="text-gray-600">Level {session.user.level} Developer</p>
+                <p className="text-gray-600">Level {userData.level} Developer</p>
               </div>
             </div>
             <button
@@ -66,13 +100,13 @@ export default function ProfilePage() {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="text-3xl mb-2">🎯</div>
             <h3 className="text-xl font-semibold text-gray-800 mb-1">Current Level</h3>
-            <p className="text-3xl font-bold text-blue-600">{session.user.level}</p>
+            <p className="text-3xl font-bold text-blue-600">{userData.level}</p>
           </div>
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="text-3xl mb-2">📚</div>
             <h3 className="text-xl font-semibold text-gray-800 mb-1">Skills</h3>
             <p className="text-3xl font-bold text-green-600">
-              {session.user.skills?.length || 0}
+              {userData.skills?.length || 0}
             </p>
           </div>
           <div className="bg-white rounded-xl shadow-lg p-6">
@@ -85,9 +119,9 @@ export default function ProfilePage() {
         {/* Skills */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Your Skills</h2>
-          {session.user.skills && session.user.skills.length > 0 ? (
+          {userData.skills && userData.skills.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {session.user.skills.map((skill, index) => (
+              {userData.skills.map((skill, index) => (
                 <span
                   key={index}
                   className="px-3 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
