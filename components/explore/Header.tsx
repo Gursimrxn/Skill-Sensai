@@ -41,7 +41,10 @@ export const Header: React.FC = () => {
                     Logout
                 </button>
                 {/* Profile icon */}
-                <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
+                <div 
+                    className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center cursor-pointer hover:bg-orange-600 transition-colors"
+                    onClick={handleProfileClick}
+                >
                     <Image src="/profile.png" alt="Profile" width={32} height={32} />
                 </div>
             </div>
