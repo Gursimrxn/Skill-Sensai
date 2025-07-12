@@ -79,7 +79,8 @@ const UserAvailabilitySchema = new Schema<IUserAvailability>({
 });
 
 // Index for efficient querying
-UserAvailabilitySchema.index({ userId: 1 });
+// unique: true on userId field already creates an index, so remove explicit duplicate
+// UserAvailabilitySchema.index({ userId: 1 });
 UserAvailabilitySchema.index({ 'availableSlots.date': 1, 'availableSlots.isBooked': 1 });
 
 export const UserAvailability = mongoose.models.UserAvailability || mongoose.model<IUserAvailability>('UserAvailability', UserAvailabilitySchema);

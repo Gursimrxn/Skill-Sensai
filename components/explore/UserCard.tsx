@@ -3,12 +3,15 @@ import { User } from '@/lib/data/explore-data';
 import { motion } from 'framer-motion';
 
 interface UserCardProps {
-  user: User;
+  user: any; // using API user object with skills and skillsToLearn
   index: number;
   onRequest: (userId: number) => void;
 }
 
 export const UserCard: React.FC<UserCardProps> = ({ user, index, onRequest }) => {
+  const knows = user.skills || [];
+  const teaches = user.skillsToLearn || [];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -19,8 +22,14 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index, onRequest }) =>
       {/* User Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-[${user.bgColor}] text-xl`}>
-            {user.avatar}
+          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+            {user.image ? (
+              <img src={user.image} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              <span className="flex items-center justify-center w-full h-full bg-gray-300 text-xl text-white">
+                {user.name.charAt(0)}
+              </span>
+            )}
           </div>
           <div>
             <h3 className="text-xl font-bold font-urbanist text-gray-900">{user.name}</h3>
@@ -36,14 +45,10 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index, onRequest }) =>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">Knows:</span>
           <div className="flex gap-2 mt-1 flex-wrap">
-            {user.knows.map((skill, idx) => (
+            {knows.map((skill: string, idx: number) => (
               <span
                 key={idx}
-                className="px-3 py-1 rounded-full text-sm"
-                style={{ 
-                  backgroundColor: user.bgColor,
-                  color: '#333'
-                }}
+                className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm"
               >
                 {skill}
               </span>
@@ -55,14 +60,10 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index, onRequest }) =>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600">Teaches:</span>
             <div className="flex gap-2 mt-1 flex-wrap">
-              {user.teaches.map((skill, idx) => (
+              {teaches.map((skill: string, idx: number) => (
                 <span
                   key={idx}
-                  className="px-3 py-1 rounded-full text-sm"
-                  style={{ 
-                    backgroundColor: user.bgColor,
-                    color: '#333'
-                  }}
+                  className="px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm"
                 >
                   {skill}
                 </span>
@@ -73,8 +74,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user, index, onRequest }) =>
           {/* Request Button */}
           <button
             onClick={() => onRequest(user.id)}
-            className="px-6 py-2 rounded-full text-white"
-            style={{ backgroundColor: user.requestColor }}
+            className="px-4 py-2 rounded-full bg-pink-500 text-white hover:bg-pink-600 transition-colors"
           >
             Request
           </button>
