@@ -29,9 +29,9 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Redirect to /explore after successful login
-      if (url === baseUrl) return `${baseUrl}/explore`;
+      // Allow custom callback URLs to work
       if (url.startsWith(baseUrl)) return url;
+      // Default redirect to /explore
       return `${baseUrl}/explore`;
     },
   },
