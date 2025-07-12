@@ -1,7 +1,17 @@
+'use client';
+
 import React from "react";
 import { signOut } from 'next-auth/react';
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 export const Header: React.FC = () => {
+    const router = useRouter();
+
+    const handleProfileClick = () => {
+        router.push('/profile');
+    };
+
     return (
         <header className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center justify-center gap-3">
