@@ -162,23 +162,30 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
       className="min-h-screen flex items-center justify-center bg-surface-primary p-8"
     >
       <div className="w-full max-w-2xl">
+        {/* Warning Message */}
+        <motion.div 
+          variants={fadeInUp} 
+          className="mb-6 text-center"
+        >
+          <div className="inline-flex items-center px-4 py-2 bg-orange-100 border border-orange-300 rounded-lg text-orange-700 text-sm">
+            Don't add something you don't know you will be banned
+          </div>
+        </motion.div>
+
         <motion.div variants={fadeInUp} className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Upload your resume 📄
+            Upload your resume
           </h1>
-          <p className="text-xl text-gray-600">
-            Help us understand your experience better
-          </p>
         </motion.div>
 
         <motion.div variants={fadeInUp} className="bg-white rounded-2xl shadow-xl p-8">
           <div
-            className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-200 ${
+            className={`border-2 border-dashed rounded-xl p-16 text-center transition-all duration-200 ${
               isDragging
                 ? 'border-[#ff88b0] bg-[#fff0f5]'
-                : uploadedFile
+              : uploadedFile
                 ? 'border-[#22c55e] bg-[#f0fdf4]'
-                : 'border-[#d1d5db] hover:border-[#ff88b0] hover:bg-[#fafafa]'
+                : 'border-[#e5e7eb] hover:border-[#d1d5db]'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -196,41 +203,37 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="space-y-4"
+                className="space-y-6"
               >
-                <div className="text-6xl">✅</div>
-                <h3 className="text-xl font-semibold text-green-700">
-                  File selected!
-                </h3>
-                <p className="text-green-600">{uploadedFile.name}</p>
-                <p className="text-sm text-gray-500">
-                  {(uploadedFile.size / (1024 * 1024)).toFixed(2)} MB
+                <div className="bg-gray-100 rounded-lg px-4 py-2 inline-flex items-center">
+                  <span className="text-gray-700 font-medium">{uploadedFile.name}</span>
+                  <button 
+                    onClick={() => setUploadedFile(null)}
+                    className="ml-2 text-gray-500 hover:text-gray-700"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-8 py-3 bg-[#ff88b0] text-white rounded-lg hover:bg-[#ff6ba0] transition-colors font-medium"
+                  >
+                    Select another Files
+                  </button>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="space-y-6">
+                <p className="text-gray-500 text-lg">
+                  Drag and Drop or upload
                 </p>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="text-[#ff88b0] hover:text-[#ff6ba0] font-medium"
+                  className="px-8 py-3 bg-[#ff88b0] text-white rounded-lg hover:bg-[#ff6ba0] transition-colors font-medium"
                 >
-                  Choose different file
+                  Select from Files
                 </button>
-              </motion.div>
-            ) : (
-              <div className="space-y-4">
-                <div className="text-6xl">📁</div>
-                <h3 className="text-xl font-semibold text-gray-700">
-                  Drop your resume here
-                </h3>
-                <p className="text-gray-500">
-                  or{' '}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="text-[#ff88b0] hover:text-[#ff6ba0] font-medium"
-                  >
-                    browse to upload
-                  </button>
-                </p>
-                <p className="text-sm text-gray-400">
-                  Supports PDF, DOC, DOCX (max 10MB)
-                </p>
               </div>
             )}
           </div>
@@ -258,36 +261,21 @@ export default function ResumeStep({ onNext, onBack }: ResumeStepProps) {
             </motion.div>
           )}
 
-          <motion.div variants={fadeInUp} className="flex justify-between mt-8">
+          <motion.div variants={fadeInUp} className="flex justify-center mt-8">
             <button
-              onClick={onBack}
-              className="px-6 py-3 text-[#6b7280] hover:text-[#374151] font-medium transition-colors"
+              onClick={handleUpload}
+              disabled={!uploadedFile || isUploading}
+              className="px-12 py-3 bg-[#ff88b0] text-white rounded-lg hover:bg-[#ff6ba0] disabled:bg-[#d1d5db] disabled:cursor-not-allowed transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl flex items-center gap-2"
             >
-              ← Back
+              {isUploading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Processing...
+                </>
+              ) : (
+                'Next'
+              )}
             </button>
-            
-            <div className="flex gap-3">
-              <button
-                onClick={handleSkip}
-                className="px-6 py-3 text-[#6b7280] hover:text-[#374151] font-medium transition-colors"
-              >
-                Skip for now
-              </button>
-              <button
-                onClick={handleUpload}
-                disabled={!uploadedFile || isUploading}
-                className="px-8 py-3 bg-[#ff88b0] text-white rounded-lg hover:bg-[#ff6ba0] disabled:bg-[#d1d5db] disabled:cursor-not-allowed transition-all duration-200 font-medium text-lg shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                {isUploading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Uploading...
-                  </>
-                ) : (
-                  'Next →'
-                )}
-              </button>
-            </div>
           </motion.div>
         </motion.div>
       </div>
