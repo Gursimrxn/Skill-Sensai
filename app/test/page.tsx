@@ -16,18 +16,8 @@ export default function TestPage() {
     }
   }, [status, session, router]);
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!session?.user) {
+  // Show content immediately, redirect happens in background
+  if (!session?.user && status !== 'loading') {
     return null;
   }
 
@@ -97,7 +87,7 @@ export default function TestPage() {
         {/* Current Skills */}
         <div className="max-w-2xl mx-auto mt-8 bg-white rounded-xl shadow-lg p-6">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Your Current Skills</h3>
-          {session.user.skills && session.user.skills.length > 0 ? (
+          {session?.user?.skills && session.user.skills.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {session.user.skills.map((skill, index) => (
                 <span

@@ -8,7 +8,7 @@ export default function Home() {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    // Automatic redirect after sign in
+    // Instant redirect after sign in - no waiting
     if (status === 'authenticated' && session?.user) {
       window.location.href = '/onboarding';
     }
@@ -18,26 +18,9 @@ export default function Home() {
     signIn('google');
   };
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (status === 'authenticated') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Redirecting to onboarding...</p>
-        </div>
-      </div>
-    );
+    // Instant redirect, no loading screen
+    return null;
   }
 
   return (

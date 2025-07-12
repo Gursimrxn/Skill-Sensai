@@ -1,7 +1,6 @@
 'use client';
 
 import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
@@ -17,46 +16,33 @@ interface UserData {
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (status === 'unauthenticated') {
-        window.location.href = '/';
-        return;
-      }
+    if (status === 'unauthenticated') {
+      window.location.href = '/';
+      return;
+    }
 
-      if (status === 'authenticated' && session?.user?.email) {
-        try {
-          const response = await fetch('/api/user');
-          if (response.ok) {
-            const data = await response.json();
-            setUserData(data.user);
-            
-            // Don't redirect anymore - let user access profile even without onboarding
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      }
-      setLoading(false);
-    };
-
-    fetchUserData();
+    if (status === 'authenticated' && session?.user) {
+      // Set user data immediately from session
+      setUserData({
+        id: session.user.id || '',
+        email: session.user.email || '',
+        name: session.user.name || '',
+        image: session.user.image || '',
+        onboardingCompleted: true,
+        level: session.user.level || 1,
+        skills: session.user.skills || [],
+      });
+      
+      // Fire and forget API call to sync latest data
+      fetch('/api/user')
+        .then(res => res.json())
+        .then(data => setUserData(data.user))
+        .catch(() => {});
+    }
   }, [status, session]);
-
-  if (status === 'loading' || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!userData) {
     return null;
@@ -139,7 +125,7 @@ export default function ProfilePage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Actions</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <button
-              onClick={() => router.push('/test')}
+              onClick={() => window.location.href = '/test'}
               className="p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 text-left"
             >
               <div className="text-2xl mb-2">🧪</div>

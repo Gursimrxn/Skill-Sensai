@@ -21,79 +21,75 @@ export default function OnboardingContainer() {
   const { data: session, status } = useSession();
   const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [stepData, setStepData] = useState({
     skills: [] as string[],
     resumeUrl: '',
     level: 1,
   });
 
-  // Fetch user data and handle authentication
+  // Quick setup - no loading delays
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (status === 'unauthenticated') {
-        window.location.href = '/';
-        return;
-      }
+    if (status === 'unauthenticated') {
+      window.location.href = '/';
+      return;
+    }
 
-      if (status === 'authenticated' && session?.user?.email) {
-        try {
-          const response = await fetch('/api/user');
-          if (response.ok) {
-            const data = await response.json();
-            setUserData(data.user);
-            
-            // Check if onboarding is completed - if so, allow access but show different UI
-            // Don't redirect anymore, let user access onboarding multiple times if needed
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      }
-      setLoading(false);
-    };
-
-    fetchUserData();
+    if (status === 'authenticated' && session?.user) {
+      // Set user data immediately from session
+      setUserData({
+        id: session.user.id || '',
+        email: session.user.email || '',
+        name: session.user.name || '',
+        image: session.user.image || '',
+        onboardingCompleted: false,
+        level: 1,
+        skills: [],
+      });
+      
+      // Fire and forget API call to sync user data
+      fetch('/api/user').catch(() => {});
+    }
   }, [status, session]);
 
-  const handleStepComplete = async (step: number, data: { skills?: string[]; resumeUrl?: string; level?: number }) => {
-    try {
-      switch (step) {
-        case 1:
-          setStepData(prev => ({ ...prev, skills: data.skills ?? [] }));
-          setCurrentStep(2);
-          break;
-        case 2:
-          setStepData(prev => ({ ...prev, resumeUrl: data.resumeUrl ?? '' }));
-          setCurrentStep(3);
-          break;
-        case 3:
-          // Complete onboarding and update user
-          const finalData = {
-            level: data.level,
-            onboardingCompleted: true,
-            skills: stepData.skills,
-            resumeUrl: stepData.resumeUrl,
-          };
-          
-          const response = await fetch('/api/user', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(finalData),
-          });
-          
-          if (response.ok) {
-            // Onboarding completed - handled by LevelStep component
-            return;
-          } else {
-            throw new Error('Failed to complete onboarding');
-          }
-      }
-    } catch (error) {
-      console.error('Error updating onboarding step:', error);
-      alert('Failed to save progress. Please try again.');
+  const handleStepComplete = (step: number, data: { skills?: string[]; resumeUrl?: string; level?: number }) => {
+    // Instant UI updates - no waiting for API
+    switch (step) {
+      case 1:
+        setStepData(prev => ({ ...prev, skills: data.skills ?? [] }));
+        setCurrentStep(2);
+        // Fire and forget API call
+        fetch('/api/user', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ skills: data.skills }),
+        }).catch(() => {});
+        break;
+      case 2:
+        setStepData(prev => ({ ...prev, resumeUrl: data.resumeUrl ?? '' }));
+        setCurrentStep(3);
+        // Fire and forget API call
+        fetch('/api/user', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ resumeUrl: data.resumeUrl }),
+        }).catch(() => {});
+        break;
+      case 3:
+        // Complete onboarding immediately
+        const finalData = {
+          level: data.level,
+          onboardingCompleted: true,
+          skills: stepData.skills,
+          resumeUrl: stepData.resumeUrl,
+        };
+        
+        // Fire and forget API call
+        fetch('/api/user', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(finalData),
+        }).catch(() => {});
+        break;
     }
   };
 
@@ -114,17 +110,6 @@ export default function OnboardingContainer() {
       setCurrentStep(currentStep - 1);
     }
   };
-
-  if (status === 'loading' || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (status === 'unauthenticated' || !userData) {
     return null;
