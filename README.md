@@ -1,8 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app)
 
-## Getting Started
+# Skill Sensei 🥋 – Swap Skills. Grow Together.
 
-First, run the development server:
+**Skill Sensei** is a modern, minimal web app that allows users to **list skills they offer**, **request skills they want**, and **connect with others for mutually beneficial learning swaps**. Built with [Next.js 13+ App Router](https://nextjs.org), TypeScript, and a clean architecture, the platform fosters a community where *everyone is both a teacher and a learner*.
+
+---
+
+## 🚀 Getting Started
+
+First, clone the repo and install dependencies:
+
+```bash
+npm install
+# or
+yarn
+# or
+pnpm install
+# or
+bun install
+```
+
+Then, start the development server:
 
 ```bash
 npm run dev
@@ -14,48 +31,79 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧠 Key Features
 
-## Learn More
+- 🔐 Authentication with NextAuth
+- 👤 Create Profiles with name, skills offered, skills wanted, and availability
+- 🧩 Skill Matching: Search users by skills (e.g., Photoshop, Excel)
+- 🔁 Swap Requests: Accept/reject/delete swaps
+- ⭐ Ratings after a successful swap
+- 👀 Public/Private Profile toggle
+- 📆 Availability preferences (e.g., evenings, weekends)
+- 🛡️ Admin moderation for spammy content and user behavior
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🗂️ Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-
-### Project Structure
 ```
-├── app/                          # Next.js 13+ App Router
-│   ├── api/                      # API Routes
-│   │   ├── auth/[...nextauth]/   # NextAuth configuration
-│   │   └── onboarding/           # Onboarding API endpoints
-│   ├── onboarding/               # Onboarding flow pages
-│   ├── profile/                  # User profile page
-│   └── test/                     # Testing interface
-├── components/                   # React components
-│   ├── onboarding/              # Onboarding flow components
-│   ├── animations/              # Framer Motion variants
-│   └── providers/               # Context providers
-├── hooks/                       # Custom React hooks
-├── lib/                         # Core business logic
-│   ├── core/                    # Type definitions and interfaces
-│   ├── db/                      # Database layer
-│   │   ├── models/              # MongoDB models
-│   │   └── repositories/        # Data access layer
-│   ├── services/                # Business logic services
-│   └── di/                      # Dependency injection container
-└── types/                       # TypeScript type definitions
+app/                          # App Router structure
+├── api/                      # API Routes
+│   ├── auth/[...nextauth]/   # NextAuth config
+│   └── onboarding/           # User onboarding APIs
+├── onboarding/               # Onboarding pages
+├── profile/                  # User profile pages
+└── test/                     # Temporary/testing interface
+components/                   # UI components
+├── onboarding/              # Reusable onboarding components
+├── animations/              # Framer Motion variants
+└── providers/               # App context providers
+hooks/                       # Custom React hooks
+lib/                         # Core application logic
+├── core/                    # Shared types and utilities
+├── db/                      # Database setup
+│   ├── models/              # MongoDB schemas
+│   └── repositories/        # Data access logic
+├── services/                # Business logic services
+└── di/                      # Dependency injection
+types/                       # Global TypeScript types
 ```
+
+---
+
+## 🎨 Design
+
+View the full design on Figma:  
+👉 [Figma Prototype](https://www.figma.com/design/wGIsfS4RwfN25gznxTu3yM/Untitled?node-id=0-1&t=IgzypozFpqiQwrZ1-1)
+
+---
+
+## 👥 Team
+
+Built with 💡 by **Team Skill Sensei**  
+Members: Gursimran Singh | Ekaspreet singh Atwal | Aagam Jain | Jashanjot Singh
+
+---
+
+## 📚 Learn More
+
+- [Next.js Docs](https://nextjs.org/docs)
+- [Next.js Learn](https://nextjs.org/learn)
+- [Vercel Deployment](https://vercel.com/new)
+
+---
+
+## ☁️ Deployment
+
+Deploy Skill Sensei with a single click using **Vercel**:  
+👉 [Deploy on Vercel](https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
