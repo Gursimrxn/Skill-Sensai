@@ -35,9 +35,6 @@ export const authOptions: NextAuthOptions = {
       return `${baseUrl}/explore`;
     },
   },
-  pages: {
-    signIn: '/',
-  },
   session: {
     strategy: 'database',
   },
