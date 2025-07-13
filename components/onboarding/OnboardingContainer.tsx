@@ -116,6 +116,11 @@ export default function OnboardingContainer() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(finalData),
         }).catch(() => {});
+        
+        // Redirect to explore page after completing onboarding
+        setTimeout(() => {
+          window.location.href = '/explore';
+        }, 500); // Small delay to ensure data is saved
         break;
     }
   };

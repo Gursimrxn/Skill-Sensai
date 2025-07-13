@@ -1,4 +1,5 @@
 // Data for the explore page
+import { generateRandomIndianUser } from '@/lib/utils/avatarUtils';
 
 // Types
 export interface User {
@@ -35,96 +36,98 @@ export interface Request {
   timestamp: string;
 }
 
-// Sample user data based on the image
+// Sample user data with diverse Indian names and filled teaching skills
 export const users: User[] = [
   {
     id: 1,
-    name: "Aisha Patel",
+    name: "Priya Sharma",
     level: 1,
-    avatar: "👩🏻",
+    avatar: "/profile.png",
     knows: ["Python", "Data Science"],
-    teaches: ["Python", "Machine Learning"],
+    teaches: ["Python", "Machine Learning", "Data Analysis"],
     bgColor: "#ffebf0",    // Pink background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#ff88b0" // Pink button
   },
   {
     id: 2,
-    name: "Marcus Johnson", 
-    level: 1,
-    avatar: "👨🏼",
+    name: "Arjun Patel", 
+    level: 2,
+    avatar: "/profile-blue.png",
     knows: ["JavaScript", "React"],
-    teaches: ["JavaScript", "Web Dev"],
-    bgColor: "#fff4e6",    // Yellow/orange background
-    cardColor: "#f9f9f9",  // Light gray card
-    requestColor: "#ffb347" // Orange button
-  },
-  {
-    id: 3,
-    name: "Sophia Chen",
-    level: 1,
-    avatar: "👨🏻",
-    knows: ["Java", "Spring"],
-    teaches: ["Java", "Backend"],
-    bgColor: "#e6f7ff",    // Light blue background
+    teaches: ["JavaScript", "React", "Web Development"],
+    bgColor: "#e6f0ff",    // Light blue background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#66c7ff" // Blue button
   },
   {
-    id: 4,
-    name: "Raj Mehta",
+    id: 3,
+    name: "Kavya Reddy",
     level: 1,
-    avatar: "🧑🏽",
-    knows: ["UI/UX", "Figma"],
-    teaches: ["Design", "Prototyping"],
+    avatar: "/profile-green.png",
+    knows: ["Java", "Spring Boot"],
+    teaches: ["Java", "Spring Boot", "Backend Development"],
     bgColor: "#e6ffed",    // Light green background
     cardColor: "#f9f9f9",  // Light gray card
-    requestColor: "#4cd964" // Green button
+    requestColor: "#5ae9aa" // Green button
+  },
+  {
+    id: 4,
+    name: "Rohit Gupta",
+    level: 3,
+    avatar: "/profile-yello.png",
+    knows: ["UI/UX Design", "Figma"],
+    teaches: ["UI/UX Design", "Figma", "Design Systems"],
+    bgColor: "#fff4e6",    // Light yellow background
+    cardColor: "#f9f9f9",  // Light gray card
+    requestColor: "#ffb347" // Yellow button
   },
   {
     id: 5,
-    name: "Emma Thompson",
-    level: 1,
-    avatar: "👨🏼",
-    knows: ["DevOps", "Docker"],
-    teaches: ["Kubernetes", "CI/CD"],
-    bgColor: "#fff9e6",    // Light yellow background
+    name: "Ananya Singh",
+    level: 2,
+    avatar: "/profile.png",
+    knows: ["DevOps", "Docker", "AWS"],
+    teaches: ["DevOps", "Docker", "Kubernetes", "Cloud Architecture"],
+    bgColor: "#ffebf0",    // Pink background
     cardColor: "#f9f9f9",  // Light gray card
-    requestColor: "#ffda79" // Yellow button
+    requestColor: "#ff88b0" // Pink button
   },
   {
     id: 6,
-    name: "Alex Rodriguez",
-    level: 1,
-    avatar: "🧑🏻‍💻",
-    knows: ["C++", "Algorithms"],
-    teaches: ["Data Structures", "Problem Solving"],
-    bgColor: "#f0e6ff",    // Light purple background
+    name: "Vikram Mehta",
+    level: 2,
+    avatar: "/profile-blue.png",
+    knows: ["C++", "Algorithms", "Data Structures"],
+    teaches: ["C++", "Data Structures", "Competitive Programming"],
+    bgColor: "#e6f0ff",    // Light blue background
     cardColor: "#f9f9f9",  // Light gray card
-    requestColor: "#d4a5ff" // Purple button
+    requestColor: "#66c7ff" // Blue button
   },
   {
     id: 7,
-    name: "Priya Sharma",
+    name: "Shreya Agarwal",
     level: 1,
-    avatar: "👨🏽",
-    knows: ["Flutter", "Dart"],
-    teaches: ["Mobile Dev", "UI Design"],
-    bgColor: "#e6fff2",    // Mint green background
+    avatar: "/profile-green.png",
+    knows: ["Flutter", "Dart", "Mobile Development"],
+    teaches: ["Flutter", "Dart", "Mobile App Development"],
+    bgColor: "#e6ffed",    // Light green background
     cardColor: "#f9f9f9",  // Light gray card
     requestColor: "#5ae9aa" // Green button
   },
   {
     id: 8,
-    name: "David Kim",
-    level: 1,
-    avatar: "👨🏻",
-    knows: ["TypeScript", "Next.js"],
-    teaches: ["React", "Full Stack"],
-    bgColor: "#e6f0ff",    // Very light blue background
+    name: "Karan Joshi",
+    level: 2,
+    avatar: "/profile-yello.png",
+    knows: ["TypeScript", "Next.js", "Node.js"],
+    teaches: ["TypeScript", "Next.js", "Full Stack Development"],
+    bgColor: "#fff4e6",    // Light yellow background
     cardColor: "#f9f9f9",  // Light gray card
-    requestColor: "#80bdff" // Light blue button
-  }
+    requestColor: "#ffb347" // Yellow button
+  },
+  // Additional Indian users with random generation
+  ...Array.from({ length: 12 }, (_, index) => generateRandomIndianUser(9 + index))
 ];
 
 // Chat messages data
@@ -151,12 +154,12 @@ export const chatMessages: ChatMessage[] = [
   }
 ];
 
-// Suggested users data
+// Suggested users data with Indian names
 export const suggestedUsers: SuggestedUser[] = [
-  { id: 1, name: "Aisha Patel", avatar: "👩🏻", skill: "Data Science" },
-  { id: 6, name: "Alex Rodriguez", avatar: "🧑🏻‍💻", skill: "Algorithms" },
-  { id: 2, name: "Marcus Johnson", avatar: "🧑🏼", skill: "JavaScript" },
-  { id: 7, name: "Priya Sharma", avatar: "👨🏽", skill: "Mobile Dev" }
+  { id: 1, name: "Priya Sharma", avatar: "/profile.png", skill: "Data Science" },
+  { id: 6, name: "Vikram Mehta", avatar: "/profile-blue.png", skill: "Algorithms" },
+  { id: 2, name: "Arjun Patel", avatar: "/profile-blue.png", skill: "JavaScript" },
+  { id: 7, name: "Shreya Agarwal", avatar: "/profile-green.png", skill: "Mobile Dev" }
 ];
 
 // Sample request data

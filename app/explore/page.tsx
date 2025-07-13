@@ -12,31 +12,10 @@ import { SearchBar } from '@/components/explore/SearchBar';
 import { Header } from '@/components/explore/Header';
 
 export default function ExplorePage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
-  // Redirect to home if not authenticated
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-      return;
-    }
-  }, [status, router]);
-
-  // Show loading while checking authentication
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-[#fffbf7] flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
-      </div>
-    );
-  }
-
-  // Don't render content if not authenticated
-  if (status === 'unauthenticated') {
-    return null;
-  }
-  // State for search and filters
+  // State for search and filters - MUST be at the top level
   const [searchQuery, setSearchQuery] = useState("");
   const [availability, setAvailability] = useState("Availability");
   const [chatInput, setChatInput] = useState("");
@@ -125,9 +104,6 @@ export default function ExplorePage() {
     }
   };
 
-  // Initial load
-  useEffect(() => { fetchUsers(); }, []);
-
   // Functions to fetch connection lists
   const fetchConnections = async (type: 'sent' | 'received') => {
     try {
@@ -146,8 +122,41 @@ export default function ExplorePage() {
     fetchConnections('received');
   }, []);
 
+  // Initial load
+  useEffect(() => { 
+    if (status === 'authenticated') {
+      fetchUsers(); 
+    }
+  }, [status]);
+
   // Load connections on mount
-  useEffect(() => { refreshConnections(); }, [refreshConnections]);
+  useEffect(() => { 
+    if (status === 'authenticated') {
+      refreshConnections(); 
+    }
+  }, [refreshConnections, status]);
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+      return;
+    }
+  }, [status, router]);
+
+  // Show loading while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#fffbf7] flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render content if not authenticated
+  if (status === 'unauthenticated') {
+    return null;
+  }
   
   return (
     <div className="min-h-screen bg-[#fffbf7] font-urbanist">

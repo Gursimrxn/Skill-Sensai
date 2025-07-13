@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ChatMessage, SuggestedUser } from '@/lib/data/explore-data';
 import { motion } from 'framer-motion';
+import { getUserAvatarData } from '@/lib/utils/avatarUtils';
 // Removed signOut import; logout moved to header
 
 interface ChatSidebarProps {
@@ -98,14 +100,26 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
           <div>
             <p className="text-xs text-gray-600 mb-1 font-urbanist font-bold">Here are some people who match your needs</p>
             <div className="grid grid-cols-2 gap-1">
-              {suggestedUsers.slice(0, 4).map((user, idx) => (
-                <div key={idx} className="flex items-center gap-1 p-1 hover:bg-gray-50 rounded-lg cursor-pointer">
-                  <div className="w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center text-xs">
-                    {user.avatar}
+              {suggestedUsers.slice(0, 4).map((user, idx) => {
+                const avatarData = getUserAvatarData(user?.id || idx);
+                return (
+                  <div key={idx} className="flex items-center gap-1 p-1 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <div 
+                      className="w-4 h-4 rounded-full flex items-center justify-center overflow-hidden"
+                      style={{ backgroundColor: avatarData.colorScheme.bgColor }}
+                    >
+                      <Image 
+                        src={avatarData.imagePath} 
+                        alt={user?.name || 'User'} 
+                        width={16} 
+                        height={16} 
+                        className="w-full h-full object-cover" 
+                      />
+                    </div>
+                    <span className="text-xs font-bold text-gray-900 font-urbanist truncate">{user?.name || 'Unknown'}</span>
                   </div>
-                  <span className="text-xs font-bold text-gray-900 font-urbanist truncate">{user.name}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <button className="text-xs text-gray-500 mt-1 hover:text-gray-700 font-bold">
               View all
@@ -148,6 +162,15 @@ interface RequestCardProps {
 }
 
 const RequestCard: React.FC<RequestCardProps> = ({ request, index, type, onAccept, onReject }) => {
+  // Get user data with fallbacks
+  const user = type === 'received' ? request?.fromUser : request?.toUser;
+  const userName = user?.name || 'Unknown User';
+  const userLevel = user?.level || 1;
+  
+  // Get randomized avatar data for this user
+  const avatarData = getUserAvatarData(user?.id || user?._id || index);
+  const userAvatarPath = avatarData.imagePath;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -158,15 +181,24 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, index, type, onAccep
       {/* User Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
-            {type === 'received' ? request.fromUser.avatar : request.toUser.avatar}
+          <div 
+            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden"
+            style={{ backgroundColor: avatarData.colorScheme.bgColor }}
+          >
+            <Image 
+              src={userAvatarPath} 
+              alt={userName} 
+              width={32} 
+              height={32} 
+              className="w-full h-full object-cover" 
+            />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="font-bold text-gray-900 font-urbanist text-sm truncate">{type === 'received' ? request.fromUser.name : request.toUser.name}</h4>
+            <h4 className="font-bold text-gray-900 font-urbanist text-sm truncate">{userName}</h4>
           </div>
         </div>
         <div className="bg-black text-white px-2 py-1 rounded-full text-xs font-bold flex-shrink-0">
-          Level {type === 'received' ? request.fromUser.level : request.toUser.level}
+          Level {userLevel}
         </div>
       </div>
 

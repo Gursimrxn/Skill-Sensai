@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { getRandomSkills, getRandomIndianName } from '@/lib/utils/avatarUtils';
 
 // Admin interface types
 interface User {
@@ -50,7 +51,41 @@ interface Message {
   status: 'draft' | 'sent';
 }
 
-const ADMIN_EMAIL = 'sgursimranmatharu@gmail.com';
+const ADMIN_EMAILS = ['sgursimranmatharu@gmail.com', 'ekasatwal.work@gmail.com'];
+
+// Generate random admin users for demonstration
+const generateRandomAdminUsers = (startId: number = 1000, count: number = 15): User[] => {
+  return Array.from({ length: count }, (_, index) => {
+    const id = startId + index;
+    const name = getRandomIndianName();
+    const skills = getRandomSkills(Math.floor(Math.random() * 4) + 2); // 2-5 skills
+    const skillsToLearn = getRandomSkills(Math.floor(Math.random() * 3) + 1); // 1-3 skills to learn
+    const level = Math.floor(Math.random() * 3) + 1; // Level 1-3
+    const onboardingCompleted = Math.random() > 0.2; // 80% completed onboarding
+    const isBanned = Math.random() > 0.9; // 10% banned
+    
+    // Generate a fake email based on name
+    const emailName = name.toLowerCase().replace(' ', '.');
+    const domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
+    const email = `${emailName}@${domains[Math.floor(Math.random() * domains.length)]}`;
+    
+    // Create date between 1-30 days ago
+    const daysAgo = Math.floor(Math.random() * 30) + 1;
+    const createdAt = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString();
+    
+    return {
+      id: id.toString(),
+      email,
+      name,
+      level,
+      skills,
+      skillsToLearn,
+      onboardingCompleted,
+      isBanned,
+      createdAt
+    };
+  });
+};
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
@@ -58,6 +93,11 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
+  
+  console.log('Admin Panel - Session status:', status);
+  console.log('Admin Panel - Session user:', session?.user?.email);
+  console.log('Admin Panel - Active tab:', activeTab);
+  
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeUsers: 0,
@@ -76,6 +116,11 @@ export default function AdminPage() {
   const [skillDescriptions, setSkillDescriptions] = useState<SkillDescription[]>([]);
 
   const [users, setUsers] = useState<User[]>([]);
+
+  // Add useEffect to log users state changes
+  useEffect(() => {
+    console.log('Users state changed:', users.length, users);
+  }, [users]);
 
   const [swaps, setSwaps] = useState<Swap[]>([]);
 
@@ -131,50 +176,138 @@ export default function AdminPage() {
     loadStats();
     
     // Load data based on active tab
-    if (activeTab === 'users') {
+    if (activeTab === 'users' || activeTab === 'dashboard') {
       loadUsers();
-    } else if (activeTab === 'swaps') {
+    }
+    if (activeTab === 'swaps' || activeTab === 'dashboard') {
       loadSwaps();
-    } else if (activeTab === 'skills') {
+    }
+    if (activeTab === 'skills' || activeTab === 'dashboard') {
       loadSkills();
-    } else if (activeTab === 'messages') {
+    }
+    if (activeTab === 'messages' || activeTab === 'dashboard') {
       loadMessages();
     }
   }, [activeTab, loadStats]);
 
   const loadUsers = async () => {
     try {
+      console.log('Loading users from API...');
       const response = await fetch('/api/admin/users');
+      let dbUsers: User[] = [];
+      
+      console.log('API Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
-        setUsers(data.users);
+        dbUsers = data.users || [];
+        console.log('Successfully loaded users from DB:', dbUsers.length);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.log('API response not OK:', response.status, errorData);
       }
+      
+      // Generate random users to append to DB users
+      const randomUsers = generateRandomAdminUsers(1000, 15);
+      
+      // Combine DB users with random users
+      const allUsers = [...dbUsers, ...randomUsers];
+      
+      console.log(`Final user count: ${dbUsers.length} from DB + ${randomUsers.length} random = ${allUsers.length} total`);
+      setUsers(allUsers);
     } catch (error) {
-      console.error('Error loading users:', error);
+      console.error('Error loading users from API, falling back to random data:', error);
+      
+      // If API fails completely, just use random users
+      const randomUsers = generateRandomAdminUsers(1000, 20);
+      console.log('Using fallback random users:', randomUsers.length);
+      setUsers(randomUsers);
     }
   };
 
   const loadSwaps = async () => {
     try {
       const response = await fetch('/api/admin/swaps');
+      let dbSwaps: Swap[] = [];
+      
       if (response.ok) {
         const data = await response.json();
-        setSwaps(data.swaps);
+        dbSwaps = data.swaps || [];
+      }
+      
+      // Generate some sample swaps if needed
+      if (dbSwaps.length === 0) {
+        const sampleSwaps: Swap[] = [
+          {
+            id: '1',
+            requester: { name: 'Priya Sharma', email: 'priya.sharma@gmail.com' },
+            responder: { name: 'Arjun Patel', email: 'arjun.patel@gmail.com' },
+            skillsOffered: ['Python', 'Data Science'],
+            skillsRequested: ['React', 'JavaScript'],
+            status: 'pending',
+            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: '2',
+            requester: { name: 'Vikram Mehta', email: 'vikram.mehta@gmail.com' },
+            responder: { name: 'Kavya Reddy', email: 'kavya.reddy@gmail.com' },
+            skillsOffered: ['Java', 'Spring Boot'],
+            skillsRequested: ['UI/UX Design', 'Figma'],
+            status: 'accepted',
+            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        ];
+        setSwaps(sampleSwaps);
+      } else {
+        setSwaps(dbSwaps);
       }
     } catch (error) {
       console.error('Error loading swaps:', error);
+      setSwaps([]);
     }
   };
 
   const loadSkills = async () => {
     try {
       const response = await fetch('/api/admin/skills');
+      let dbSkills: SkillDescription[] = [];
+      
       if (response.ok) {
         const data = await response.json();
-        setSkillDescriptions(data.skills);
+        dbSkills = data.skills || [];
+      }
+      
+      // Generate some sample skill descriptions if needed
+      if (dbSkills.length === 0) {
+        const sampleSkills: SkillDescription[] = [
+          {
+            id: '1',
+            userId: '1001',
+            userName: 'Priya Sharma',
+            skill: 'Python',
+            description: 'Experienced in Python for data science and web development. Can teach basics to advanced concepts.',
+            status: 'approved',
+            reportCount: 0,
+            createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: '2',
+            userId: '1002',
+            userName: 'Arjun Patel',
+            skill: 'React',
+            description: 'Frontend developer with 3+ years React experience. Specialized in modern React patterns and hooks.',
+            status: 'pending',
+            reportCount: 0,
+            createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        ];
+        setSkillDescriptions(sampleSkills);
+      } else {
+        setSkillDescriptions(dbSkills);
       }
     } catch (error) {
       console.error('Error loading skills:', error);
+      setSkillDescriptions([]);
     }
   };
 
@@ -199,7 +332,7 @@ export default function AdminPage() {
     );
   }
 
-  if (status === 'unauthenticated' || session?.user?.email !== ADMIN_EMAIL) {
+  if (status === 'unauthenticated' || !session?.user?.email || !ADMIN_EMAILS.includes(session.user.email)) {
     return (
       <div className="min-h-screen bg-[#fffbf7] flex items-center justify-center">
         <div className="text-center">
@@ -383,10 +516,10 @@ export default function AdminPage() {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{session.user?.name}</p>
-                <p className="text-xs text-gray-600">{session.user?.email}</p>
+                <p className="text-sm font-medium text-gray-900">{session?.user?.name}</p>
+                <p className="text-xs text-gray-600">{session?.user?.email}</p>
               </div>
-              {session.user?.image && (
+              {session?.user?.image && (
                 <Image
                   src={session.user.image}
                   alt="Admin"
