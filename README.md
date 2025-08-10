@@ -3,6 +3,7 @@
 
 **Skill Sensei** is a modern, minimal web app that allows users to **list skills they offer**, **request skills they want**, and **connect with others for mutually beneficial learning swaps**. Built with [Next.js 13+ App Router](https://nextjs.org), TypeScript, and a clean architecture, the platform fosters a community where *everyone is both a teacher and a learner*.
 
+Demo Video -->https://drive.google.com/drive/folders/1FAJeiG28JpTm9PVGaMLExYIj_88cVqt-?usp=sharing
 ---
 
 ## 🚀 Getting Started
