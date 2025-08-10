@@ -50,7 +50,7 @@ export default function Home() {
           backgroundImage: "url('/section.svg')"
         }}
       >
-        <h2 className='text-4xl md:text-6xl font-bold text-white mt-12 leading-tight max-w-4xl mx-auto text-center'>
+        <h2 className='text-4xl md:text-6xl font-bold text-white mt-12 leading-tight max-w-4xl mx-auto text-center mix-blend-difference'>
           Ready to turn your knowledge into a two-way street?
         </h2>
         
@@ -70,7 +70,7 @@ export default function Home() {
             </div>
             <div className="flex flex-wrap gap-x-2 gap-y-1 text-base text-center justify-center md:justify-end">
               <Link
-              href="https://github.com/gursimransingh-github"
+              href="https://github.com/gursimrxn"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-purple-700 transition-colors break-all"
@@ -79,7 +79,7 @@ export default function Home() {
               </Link>
               <span className="hidden md:inline">|</span>
               <Link
-              href="https://github.com/ekaspreet-singh"
+              href="https://github.com/ekas-7"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-purple-700 transition-colors break-all"
@@ -88,7 +88,7 @@ export default function Home() {
               </Link>
               <span className="hidden md:inline">|</span>
               <Link
-              href="https://github.com/aagamjain"
+              href="https://github.com/0aagam"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-purple-700 transition-colors break-all"
@@ -97,7 +97,7 @@ export default function Home() {
               </Link>
               <span className="hidden md:inline">|</span>
               <Link
-              href="https://github.com/jashanjotsingh"
+              href="https://github.com/singhjashanjot"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-purple-700 transition-colors break-all"

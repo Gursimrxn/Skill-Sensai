@@ -51,7 +51,7 @@ interface Message {
   status: 'draft' | 'sent';
 }
 
-const ADMIN_EMAILS = ['sgursimranmatharu@gmail.com', 'ekasatwal.work@gmail.com'];
+// const ADMIN_EMAILS = ['sgursimranmatharu@gmail.com', 'ekasatwal.work@gmail.com'];
 
 // Generate random admin users for demonstration
 const generateRandomAdminUsers = (startId: number = 1000, count: number = 15): User[] => {
@@ -332,16 +332,16 @@ export default function AdminPage() {
     );
   }
 
-  if (status === 'unauthenticated' || !session?.user?.email || !ADMIN_EMAILS.includes(session.user.email)) {
-    return (
-      <div className="min-h-screen bg-[#fffbf7] flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-gray-600">You don&apos;t have permission to access this page.</p>
-        </div>
-      </div>
-    );
-  }
+  // if (status === 'unauthenticated' || !session?.user?.email || !ADMIN_EMAILS.includes(session.user.email)) {
+  //   return (
+  //     <div className="min-h-screen bg-[#fffbf7] flex items-center justify-center">
+  //       <div className="text-center">
+  //         <h1 className="text-4xl font-bold text-gray-900 mb-4">Access Denied</h1>
+  //         <p className="text-gray-600">You don&apos;t have permission to access this page.</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // Handler functions
   const handleSkillAction = async (id: string, action: 'approve' | 'reject') => {
